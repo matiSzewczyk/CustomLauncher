@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.CustomLauncher" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.CustomLauncher.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="postSplashScreenTheme">@style/Theme.CustomLauncher</item>
+    </style>
 </resources>

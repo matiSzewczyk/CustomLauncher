@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.material3.adaptive)
+    implementation(libs.androidx.core.splashscreen)
 }
