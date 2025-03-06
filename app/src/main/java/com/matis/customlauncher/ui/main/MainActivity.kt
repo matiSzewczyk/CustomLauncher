@@ -22,13 +22,18 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
 
+    override fun onStart() {
+        super.onStart()
+        packageManagerWrapper.forceCheck()
+    }
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
-            val appState = rememberAppState(packageManagerWrapper, rememberCoroutineScope())
+            val appState = rememberAppState(packageManagerWrapper)
 
             CustomLauncherTheme {
                 Scaffold(
