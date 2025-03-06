@@ -9,10 +9,14 @@ import com.matis.customlauncher.ui.AppState
 fun MainNavHost(
     appState: AppState
 ) {
+    val navController = rememberNavController()
     NavHost(
-        navController = rememberNavController(),
+        navController = navController,
         startDestination = MainNavGraph
     ) {
-        mainNavGraph(appState = appState)
+        mainNavGraph(
+            appState = appState,
+            navController = navController
+        )
     }
 }

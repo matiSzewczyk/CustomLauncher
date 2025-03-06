@@ -3,18 +3,10 @@ package com.matis.customlauncher.ui.main
 import android.content.Intent
 import android.provider.Settings
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,32 +21,14 @@ fun MainScreen(
 ) {
     val hasDefaultLauncherPermission by appState.hasDefaultLauncherPermission.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    BackHandler { viewModel.onBackPressed() }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Transparent)
-            .safeContentPadding(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (!hasDefaultLauncherPermission) NoDefaultLauncherContent(
-            onGrantPermissionClick = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
-        )
-        else Greeting("foo")
+    BackHandler {
+        if (hasDefaultLauncherPermission) viewModel.onBackPressed()
+        else (context as? MainActivity)?.onBackPressedDispatcher?.onBackPressed()
     }
-
-    BackHandler(enabled = false) {}
-}
-
-@Composable
-fun NoDefaultLauncherContent(
-    onGrantPermissionClick: () -> Unit = {}
-) {
-    Text(text = "Default launcher permission not granted. It is required for this application")
-    Button(onClick = { onGrantPermissionClick() }) {
-        Text("Grant permission")
-    }
+    if (!hasDefaultLauncherPermission) NotDefaultLauncherContent(
+        onGrantPermissionClick = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
+    )
+    else Greeting("foo")
 }
 
 @Composable

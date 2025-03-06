@@ -1,6 +1,7 @@
 package com.matis.customlauncher.navigation
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.matis.customlauncher.ui.AppState
@@ -13,10 +14,15 @@ data object MainNavGraph
 @Serializable
 data object MainScreen
 
-fun NavGraphBuilder.mainNavGraph(appState: AppState) {
+fun NavGraphBuilder.mainNavGraph(
+    appState: AppState,
+    navController: NavHostController
+) {
     navigation<MainNavGraph>(startDestination = MainScreen) {
         composable<MainScreen> {
-            MainScreen(appState = appState)
+            MainScreen(
+                appState = appState
+            )
         }
     }
 }

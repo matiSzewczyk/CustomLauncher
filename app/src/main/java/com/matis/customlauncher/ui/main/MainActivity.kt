@@ -31,7 +31,10 @@ class MainActivity : ComponentActivity() {
             val appState = rememberAppState(packageManagerWrapper, rememberCoroutineScope())
 
             CustomLauncherTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(), containerColor = Color.Transparent) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = Color.Transparent.copy(alpha = .15f)
+                ) {
                     MainNavHost(appState = appState)
                 }
             }
