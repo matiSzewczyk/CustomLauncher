@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class AppSearchViewModel @Inject constructor() : ViewModel() {
 
     fun onBackPressed() {
 

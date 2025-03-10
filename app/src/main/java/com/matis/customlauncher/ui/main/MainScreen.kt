@@ -13,7 +13,7 @@ import com.matis.customlauncher.ui.AppState
 @Composable
 fun MainScreen(
     appState: AppState,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: AppSearchViewModel = hiltViewModel()
 ) {
     val hasDefaultLauncherPermission by appState.hasDefaultLauncherPermission.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -24,5 +24,5 @@ fun MainScreen(
     if (!hasDefaultLauncherPermission) NotDefaultLauncherContent(
         onGrantPermissionClick = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
     )
-    else MainScreenContent()
+    else MainScreenContent(viewModel = viewModel, appState = appState)
 }

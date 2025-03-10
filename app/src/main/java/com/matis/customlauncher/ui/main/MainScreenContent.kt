@@ -1,51 +1,41 @@
 package com.matis.customlauncher.ui.main
 
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
+import com.matis.customlauncher.ui.AppState
+import com.matis.customlauncher.ui.Page
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreenContent(
+    viewModel: AppSearchViewModel,
+    appState: AppState
 ) {
-    var endOffset by remember { mutableStateOf(Offset(0f, 0f)) }
-    var startOffset by remember { mutableStateOf(Offset(0f, 0f)) }
-    var foo by remember { mutableStateOf(false) }
-    val minSwipeDistancePx = with(LocalDensity.current) { 80.dp.toPx() }
-    Column(
+    val pagerState = rememberPagerState(pageCount = { 2 })
+    val coroutineScope = rememberCoroutineScope()
+    val colors = Page.entries.map { it.color }
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .pointerInput(Unit) {
-                detectVerticalDragGestures(
-                    onDragStart = { startOffset = it;endOffset = it },
-                    onDragEnd = {
-                        println("start: $startOffset")
-                        println("end: $endOffset")
-                        println(endOffset.y - startOffset.y)
-                        when {
-                            startOffset.y - endOffset.y > minSwipeDistancePx -> println("swiped up")
-                            startOffset.y - endOffset.y < -minSwipeDistancePx -> println("swiped down")
-                        }
-                    },
-                    onVerticalDrag = { pointerInputChange, dragAmount ->
-                        endOffset = endOffset.plus(Offset(0f, dragAmount))
-                    }
+            .background(colors[pagerState.currentPage])
+    ) {
+        VerticalPager(state = pagerState) {
+            when (it) {
+                Page.HOME.pageNumber -> WidgetContent()
+                Page.APP_SEARCH.pageNumber -> AppSearchContent(
+                    viewModel = viewModel,
+                    appState = appState,
+                    onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } }
                 )
             }
-    ) {
-        if (foo) Text("swiped up")
-        else Text("swiped down")
+        }
     }
 }
