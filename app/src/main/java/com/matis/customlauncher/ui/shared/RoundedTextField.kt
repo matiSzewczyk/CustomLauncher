@@ -36,7 +36,7 @@ fun RoundedTextField(
             .height(48.dp)
             .fillMaxWidth()
             .background(
-                brush = SolidColor(MaterialTheme.colorScheme.background),
+                brush = SolidColor(MaterialTheme.colorScheme.background.copy(alpha = .8f)),
                 shape = RoundedCornerShape(32.dp)
             )
             .border(
