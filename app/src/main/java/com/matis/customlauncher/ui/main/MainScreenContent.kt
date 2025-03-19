@@ -15,7 +15,7 @@ import com.matis.customlauncher.ui.AppState
 import com.matis.customlauncher.ui.Page
 import com.matis.customlauncher.ui.appsearch.AppSearchContent
 import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
-import com.matis.customlauncher.ui.home.WidgetContent
+import com.matis.customlauncher.ui.home.HomeContent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -45,7 +45,7 @@ fun MainScreenContent(
     ) {
         VerticalPager(state = pagerState) {
             when (it) {
-                Page.HOME.pageNumber -> WidgetContent()
+                Page.HOME.pageNumber -> HomeContent()
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     viewModel = viewModel,
                     appState = appState,

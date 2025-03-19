@@ -5,21 +5,18 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.matis.customlauncher.ui.AppState
 import com.matis.customlauncher.ui.shared.RoundedTextField
@@ -45,12 +42,13 @@ fun AppSearchContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
             .pointerInput(null) {
                 detectTapGestures(
                     onTap = { clearFocusAndHideKeyboard() },
                 )
             }
-            .safeContentPadding(),
+            .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RoundedTextField(
