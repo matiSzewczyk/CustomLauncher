@@ -18,15 +18,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.matis.customlauncher.ui.AppState
 import com.matis.customlauncher.ui.shared.RoundedTextField
 
 @Composable
 fun AppSearchContent(
-    viewModel: AppSearchViewModel,
-    appState: AppState,
+    onSearchQueryChanged: (String) -> Unit,
+    uiState: UiState,
     onBackPressed: () -> Unit,
-    clearFocusAndHideKeyboard: () -> Unit
+    clearFocusAndHideKeyboard: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
@@ -45,15 +44,15 @@ fun AppSearchContent(
             .padding(16.dp)
             .pointerInput(null) {
                 detectTapGestures(
-                    onTap = { clearFocusAndHideKeyboard() },
+                    onTap = { clearFocusAndHideKeyboard() }
                 )
             }
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RoundedTextField(
-            text = "",
-            onValueChange = {},
+            text = uiState.query,
+            onValueChange = { onSearchQueryChanged(it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)

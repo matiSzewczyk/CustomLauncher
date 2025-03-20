@@ -34,7 +34,10 @@ fun NotDefaultLauncherContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "Default launcher permission not granted. It is required for this application")
-                Button(onClick = { onGrantPermissionClick() }) {
+                Button(
+                    onClick = { onGrantPermissionClick() },
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
                     Text("Grant permission")
                 }
             }

@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matis.customlauncher.ui.AppState
 import com.matis.customlauncher.ui.Page
 import com.matis.customlauncher.ui.appsearch.AppSearchContent
@@ -21,9 +24,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreenContent(
-    viewModel: AppSearchViewModel,
-    appState: AppState
+    appState: AppState,
+    viewModel: AppSearchViewModel = hiltViewModel()
 ) {
+    val appSearchUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -47,8 +52,8 @@ fun MainScreenContent(
             when (it) {
                 Page.HOME.pageNumber -> HomeContent()
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
-                    viewModel = viewModel,
-                    appState = appState,
+                    uiState = appSearchUiState,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     clearFocusAndHideKeyboard = clearFocusAndHideKeyboard
                 )
