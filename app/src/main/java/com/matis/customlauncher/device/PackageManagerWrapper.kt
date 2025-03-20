@@ -16,9 +16,15 @@ class PackageManagerWrapper @Inject constructor(
     private val _isDefaultLauncherApplication = MutableStateFlow(false)
     val isDefaultLauncherApplication get() = _isDefaultLauncherApplication.asStateFlow()
 
-    fun forceCheck() {
+    fun checkIfIsDefaultHomeApp() {
         val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_HOME) }
         val resolveInfo = context.packageManager.resolveActivity(intent, MATCH_DEFAULT_ONLY)
         _isDefaultLauncherApplication.update { resolveInfo?.activityInfo?.packageName == context.packageName }
+    }
+
+    fun getAllInstalledApplications(): List<String> {
+        val packageManager = context.packageManager
+        val intent = Intent(Intent.ACTION_MAIN, null).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
+        return packageManager.queryIntentActivities(intent, 0).map { it.activityInfo.packageName }
     }
 }

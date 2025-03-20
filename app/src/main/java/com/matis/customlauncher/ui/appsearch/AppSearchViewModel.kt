@@ -3,6 +3,7 @@ package com.matis.customlauncher.ui.appsearch
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matis.customlauncher.domain.GetAllApplications
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.FlowPreview
@@ -17,13 +18,16 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class AppSearchViewModel @Inject constructor() : ViewModel() {
+class AppSearchViewModel @Inject constructor(
+    private val getAllApplications: GetAllApplications
+) : ViewModel() {
 
     var uiState = MutableStateFlow(UiState())
         private set
 
     init {
         initializeSearchQueryListener()
+        fetchAllInstalledApplications()
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -32,7 +36,6 @@ class AppSearchViewModel @Inject constructor() : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("TEST", "onCleared: ")
     }
 
     private fun initializeSearchQueryListener() {
@@ -43,6 +46,13 @@ class AppSearchViewModel @Inject constructor() : ViewModel() {
                 .distinctUntilChanged()
                 .onEach { Log.d("TEST", "Running app search for query: $it") }
                 .collect()
+        }
+    }
+
+    private fun fetchAllInstalledApplications() {
+        viewModelScope.launch {
+            val applications = getAllApplications()
+            uiState.update { it.copy(applications = applications) }
         }
     }
 }

@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        packageManagerWrapper.forceCheck()
+        packageManagerWrapper.checkIfIsDefaultHomeApp()
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
