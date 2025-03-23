@@ -22,7 +22,6 @@
             android:name=".ui.main.MainActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/Theme.CustomLauncher">
             <intent-filter>
@@ -34,5 +33,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
