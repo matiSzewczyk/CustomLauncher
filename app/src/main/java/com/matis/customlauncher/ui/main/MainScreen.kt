@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matis.customlauncher.ui.AppState
-import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
 
 @Composable
 fun MainScreen(

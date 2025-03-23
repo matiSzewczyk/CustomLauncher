@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.matis.customlauncher.device.PackageManagerWrapper
+import com.matis.customlauncher.device.PackagesApi
 import com.matis.customlauncher.navigation.MainNavHost
 import com.matis.customlauncher.ui.rememberAppState
 import com.matis.customlauncher.ui.theme.CustomLauncherTheme
@@ -19,11 +19,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var packageManagerWrapper: PackageManagerWrapper
+    @Inject lateinit var packagesApi: PackagesApi
 
     override fun onStart() {
         super.onStart()
-        packageManagerWrapper.checkIfIsDefaultHomeApp()
+        packagesApi.checkIfIsDefaultHomeApp()
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val appState = rememberAppState(packageManagerWrapper)
+            val appState = rememberAppState(packagesApi)
 
             CustomLauncherTheme {
                 Scaffold(
