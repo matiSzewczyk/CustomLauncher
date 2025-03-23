@@ -13,6 +13,10 @@ class PackagesService @Inject constructor(
         repository.insertApplication(packageName)
     }
 
+    fun onApplicationRemoved(packageName: String) {
+        repository.removeApplication(packageName)
+    }
+
     fun getApplications(filter: String): Flow<List<String>> =
         repository.applications
             .map { apps -> apps.filter { it.contains(filter) } }

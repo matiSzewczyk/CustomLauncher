@@ -24,4 +24,8 @@ class PackagesRepository @Inject constructor(
     fun insertApplication(packageName: String) {
         applications.value = applications.value + packageName
     }
+
+    fun removeApplication(packageName: String) {
+        applications.value = applications.value - packageName
+    }
 }

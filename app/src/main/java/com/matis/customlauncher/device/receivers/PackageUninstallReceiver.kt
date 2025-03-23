@@ -8,25 +8,25 @@ import android.util.Log
 import com.matis.customlauncher.domain.PackagesService
 import javax.inject.Inject
 
-class ApplicationInstalledReceiver @Inject constructor(
+class PackageUninstallReceiver @Inject constructor(
     private val packagesService: PackagesService
 ) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val packageName = intent?.data?.encodedSchemeSpecificPart ?: return
 
-        packagesService.onApplicationAdded(packageName)
-        Log.d(TAG, "Application installed: $packageName")
+        packagesService.onApplicationRemoved(packageName)
+        Log.d(TAG, "Application uninstalled: $packageName")
     }
 
     fun intentFilter(): IntentFilter =
         IntentFilter()
             .apply {
-                addAction(Intent.ACTION_PACKAGE_ADDED)
+                addAction(Intent.ACTION_PACKAGE_REMOVED)
                 addDataScheme("package")
             }
 
     companion object {
-        private const val TAG = "ApplicationInstalledReceiver"
+        private const val TAG = "PackageUninstallReceiver"
     }
 }
