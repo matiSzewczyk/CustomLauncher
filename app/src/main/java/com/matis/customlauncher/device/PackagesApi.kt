@@ -17,15 +17,15 @@ class PackagesApi @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    private val _isDefaultLauncherApplication = MutableStateFlow(false)
-    val isDefaultLauncherApplication get() = _isDefaultLauncherApplication.asStateFlow()
+    private val _isDefaultHomeApp = MutableStateFlow(false)
+    val isDefaultHomeApp get() = _isDefaultHomeApp.asStateFlow()
 
     fun checkIfIsDefaultHomeApp() {
         val resolveInfo = Intent(ACTION_MAIN)
             .apply { addCategory(Intent.CATEGORY_HOME) }
             .let { intent -> context.packageManager.resolveActivity(intent, MATCH_DEFAULT_ONLY) }
 
-        _isDefaultLauncherApplication.update { resolveInfo?.activityInfo?.packageName == context.packageName }
+        _isDefaultHomeApp.update { resolveInfo?.activityInfo?.packageName == context.packageName }
     }
 
     fun getInstalledPackages(): List<PackageDto> =

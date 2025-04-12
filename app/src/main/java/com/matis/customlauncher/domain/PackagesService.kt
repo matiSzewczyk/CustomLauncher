@@ -18,7 +18,7 @@ class PackagesService @Inject constructor(
         repository.removeApplication(packageName)
     }
 
-    fun getApplications(filter: String): Flow<List<PackageDto>> =
+    fun getApplications(query: String): Flow<List<PackageDto>> =
         repository.applications
-            .map { apps -> apps.filter { it.packageName.contains(filter) } }
+            .map { apps -> apps.filter { it.packageName.contains(query) } }
 }

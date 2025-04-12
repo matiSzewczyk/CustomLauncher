@@ -20,5 +20,5 @@ class AppState(
 ) {
 
     val hasDefaultLauncherPermission: StateFlow<Boolean> =
-        packagesApi.isDefaultLauncherApplication
+        packagesApi.isDefaultHomeApp
 }
