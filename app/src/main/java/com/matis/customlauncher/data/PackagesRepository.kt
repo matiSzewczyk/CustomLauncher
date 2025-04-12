@@ -1,6 +1,7 @@
 package com.matis.customlauncher.data
 
 import com.matis.customlauncher.device.PackagesApi
+import com.matis.customlauncher.domain.data.model.PackageDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,21 +12,21 @@ class PackagesRepository @Inject constructor(
     private val packagesApi: PackagesApi
 ) {
 
-    var applications = MutableStateFlow<List<String>>(emptyList())
+    var applications = MutableStateFlow<List<PackageDto>>(emptyList())
         private set
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
-            packagesApi.getAllInstalledApplications()
-                .let { applications.value = it }
+            applications.value = packagesApi.getInstalledPackages()
         }
     }
 
     fun insertApplication(packageName: String) {
-        applications.value = applications.value + packageName
+        packagesApi.getPackageInfo(packageName)
+            ?.let { applications.value = applications.value + it }
     }
 
     fun removeApplication(packageName: String) {
-        applications.value = applications.value - packageName
+        applications.value = applications.value.filterNot { it.packageName == packageName }
     }
 }

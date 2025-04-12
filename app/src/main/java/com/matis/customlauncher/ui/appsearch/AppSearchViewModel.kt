@@ -41,7 +41,7 @@ class AppSearchViewModel @Inject constructor(
         viewModelScope.launch {
             uiState
                 .map { it.query }
-                .debounce(300)
+                .debounce(timeoutMillis = 300)
                 .distinctUntilChanged()
                 .flatMapLatest { packagesService.getApplications(filter = it) }
                 .collect { apps -> uiState.update { it.copy(applications = apps) } }
