@@ -1,7 +1,9 @@
 package com.matis.customlauncher.ui.appsearch
 
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matis.customlauncher.device.PackagesApi
 import com.matis.customlauncher.domain.PackagesService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AppSearchViewModel @Inject constructor(
-    private val packagesService: PackagesService
+    private val packagesService: PackagesService,
+    private val packagesApi: PackagesApi
 ) : ViewModel() {
 
     var uiState = MutableStateFlow(UiState())
@@ -31,6 +34,9 @@ class AppSearchViewModel @Inject constructor(
     fun onSearchQueryChanged(query: String) {
         uiState.update { it.copy(query = query) }
     }
+
+    fun onPackageIconRequested(packageName: String): Drawable? =
+        packagesApi.getPackageIcon(packageName)
 
     override fun onCleared() {
         super.onCleared()

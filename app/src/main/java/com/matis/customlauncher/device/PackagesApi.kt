@@ -6,6 +6,7 @@ import android.content.Intent.ACTION_MAIN
 import android.content.Intent.CATEGORY_LAUNCHER
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.content.pm.ResolveInfo
+import android.graphics.drawable.Drawable
 import com.matis.customlauncher.domain.data.model.PackageDto
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -35,6 +36,9 @@ class PackagesApi @Inject constructor(
         queryLauncherActivities()
             .find { it.activityInfo.packageName == packageName }
             ?.toPackageDto()
+
+    fun getPackageIcon(packageName: String): Drawable =
+        context.packageManager.getApplicationIcon(packageName)
 
     private fun queryLauncherActivities(): List<ResolveInfo> =
         context.packageManager.queryIntentActivities(

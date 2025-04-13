@@ -24,5 +24,5 @@ fun MainScreen(
     if (!hasDefaultLauncherPermission) NotDefaultLauncherContent(
         onGrantPermissionClick = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
     )
-    else MainScreenContent(appState = appState)
+    else MainScreenContent()
 }

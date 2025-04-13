@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.ui.AppState
 import com.matis.customlauncher.ui.Page
 import com.matis.customlauncher.ui.appsearch.AppSearchContent
 import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreenContent(
-    appState: AppState,
     viewModel: AppSearchViewModel = hiltViewModel()
 ) {
     val appSearchUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,7 +53,8 @@ fun MainScreenContent(
                     uiState = appSearchUiState,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                    clearFocusAndHideKeyboard = clearFocusAndHideKeyboard
+                    clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
+                    onPackageIconRequested = viewModel::onPackageIconRequested
                 )
             }
         }
