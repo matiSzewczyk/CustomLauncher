@@ -20,5 +20,5 @@ class PackagesService @Inject constructor(
 
     fun getApplications(query: String): Flow<List<PackageDto>> =
         repository.applications
-            .map { apps -> apps.filter { it.label.contains(query) } }
+            .map { apps -> apps.filter { it.label.contains(query, ignoreCase = true) } }
 }
