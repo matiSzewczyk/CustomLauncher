@@ -40,6 +40,11 @@ class PackagesApi @Inject constructor(
     fun getPackageIcon(packageName: String): Drawable =
         context.packageManager.getApplicationIcon(packageName)
 
+    fun openApplication(packageName: String) {
+        context.packageManager.getLaunchIntentForPackage(packageName)
+            ?.let { intent -> context.startActivity(intent) }
+    }
+
     private fun queryLauncherActivities(): List<ResolveInfo> =
         context.packageManager.queryIntentActivities(
             Intent(ACTION_MAIN).apply { addCategory(CATEGORY_LAUNCHER) },

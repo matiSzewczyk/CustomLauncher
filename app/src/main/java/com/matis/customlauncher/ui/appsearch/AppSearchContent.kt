@@ -2,6 +2,7 @@ package com.matis.customlauncher.ui.appsearch
 
 import android.graphics.drawable.Drawable
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,7 +38,8 @@ fun AppSearchContent(
     uiState: UiState,
     onBackPressed: () -> Unit,
     clearFocusAndHideKeyboard: () -> Unit,
-    onPackageIconRequested: (String) -> Drawable?
+    onPackageIconRequested: (String) -> Drawable?,
+    onApplicationClicked: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
@@ -77,7 +79,8 @@ fun AppSearchContent(
         items(uiState.applications) {
             TransparentApplication(
                 label = it.label,
-                icon = onPackageIconRequested(it.packageName)
+                icon = onPackageIconRequested(it.packageName),
+                onApplicationClicked = { onApplicationClicked(it.packageName) }
             )
         }
     }
@@ -86,12 +89,14 @@ fun AppSearchContent(
 @Composable
 private fun TransparentApplication(
     label: String,
-    icon: Drawable?
+    icon: Drawable?,
+    onApplicationClicked: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(84.dp),
+            .height(84.dp)
+            .clickable { onApplicationClicked() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

@@ -39,6 +39,10 @@ class AppSearchViewModel @Inject constructor(
     fun onPackageIconRequested(packageName: String): Drawable? =
         packagesApi.getPackageIcon(packageName)
 
+    fun onApplicationClicked(packageName: String) {
+        packagesApi.openApplication(packageName)
+    }
+
     override fun onCleared() {
         super.onCleared()
     }
