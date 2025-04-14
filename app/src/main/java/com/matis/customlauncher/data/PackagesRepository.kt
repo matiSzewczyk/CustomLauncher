@@ -1,7 +1,7 @@
 package com.matis.customlauncher.data
 
 import com.matis.customlauncher.device.PackagesApi
-import com.matis.customlauncher.domain.data.model.PackageDto
+import com.matis.customlauncher.domain.data.model.PackageInfoDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ class PackagesRepository @Inject constructor(
     private val packagesApi: PackagesApi
 ) {
 
-    var applications = MutableStateFlow<List<PackageDto>>(emptyList())
+    var applications = MutableStateFlow<List<PackageInfoDto>>(emptyList())
         private set
 
     init {

@@ -1,7 +1,8 @@
 package com.matis.customlauncher.ui.appsearch
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -30,6 +35,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.matis.customlauncher.domain.data.model.PackageInfoDto
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
@@ -76,37 +82,52 @@ fun AppSearchContent(
                     .onFocusChanged { isSearchFocused.value = it.isFocused }
             )
         }
-        items(uiState.applications) {
+        items(uiState.applications) { packageInfo ->
             TransparentApplication(
-                label = it.label,
-                packageName = it.packageName,
-                onApplicationClicked = { onApplicationClicked(it.packageName) }
+                packageInfo = packageInfo,
+                onApplicationClicked = { onApplicationClicked(packageInfo.packageName) }
             )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
-    label: String,
-    packageName: String,
+    packageInfo: PackageInfoDto,
     onApplicationClicked: () -> Unit
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(84.dp)
-            .clickable { onApplicationClicked() },
+            .combinedClickable(
+                onClick = { onApplicationClicked() },
+                onLongClick = { menuExpanded = true },
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = context.getApplicationIcon(packageName),
+            model = context.getApplicationIcon(packageInfo.packageName),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .size(32.dp)
         )
-        Text(text = label, color = Color.White)
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(text = "Add to home screen") },
+                onClick = { println("Add to home screen clicked") }, // TODO: Implement this action
+            )
+        }
+        Text(
+            text = packageInfo.label,
+            color = Color.White
+        )
     }
 }

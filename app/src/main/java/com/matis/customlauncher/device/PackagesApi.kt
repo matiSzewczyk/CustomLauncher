@@ -6,7 +6,7 @@ import android.content.Intent.ACTION_MAIN
 import android.content.Intent.CATEGORY_LAUNCHER
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.content.pm.ResolveInfo
-import com.matis.customlauncher.domain.data.model.PackageDto
+import com.matis.customlauncher.domain.data.model.PackageInfoDto
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,10 +28,10 @@ class PackagesApi @Inject constructor(
         _isDefaultHomeApp.update { resolveInfo?.activityInfo?.packageName == context.packageName }
     }
 
-    fun getInstalledPackages(): List<PackageDto> =
+    fun getInstalledPackages(): List<PackageInfoDto> =
         queryLauncherActivities().map { it.toPackageDto() }
 
-    fun getPackageInfo(packageName: String): PackageDto? =
+    fun getPackageInfo(packageName: String): PackageInfoDto? =
         queryLauncherActivities()
             .find { it.activityInfo.packageName == packageName }
             ?.toPackageDto()
@@ -47,8 +47,8 @@ class PackagesApi @Inject constructor(
             0
         )
 
-    private fun ResolveInfo.toPackageDto(): PackageDto =
-        PackageDto(
+    private fun ResolveInfo.toPackageDto(): PackageInfoDto =
+        PackageInfoDto(
             packageName = activityInfo.packageName,
             label = loadLabel(context.packageManager).toString()
         )
