@@ -1,6 +1,5 @@
 package com.matis.customlauncher.ui.appsearch
 
-import android.graphics.drawable.Drawable
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -28,9 +27,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.matis.customlauncher.ui.shared.RoundedTextField
+import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 @Composable
 fun AppSearchContent(
@@ -38,7 +39,6 @@ fun AppSearchContent(
     uiState: UiState,
     onBackPressed: () -> Unit,
     clearFocusAndHideKeyboard: () -> Unit,
-    onPackageIconRequested: (String) -> Drawable?,
     onApplicationClicked: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -79,7 +79,7 @@ fun AppSearchContent(
         items(uiState.applications) {
             TransparentApplication(
                 label = it.label,
-                icon = onPackageIconRequested(it.packageName),
+                packageName = it.packageName,
                 onApplicationClicked = { onApplicationClicked(it.packageName) }
             )
         }
@@ -89,9 +89,10 @@ fun AppSearchContent(
 @Composable
 private fun TransparentApplication(
     label: String,
-    icon: Drawable?,
+    packageName: String,
     onApplicationClicked: () -> Unit
 ) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,7 +101,7 @@ private fun TransparentApplication(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = icon,
+            model = context.getApplicationIcon(packageName),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 16.dp)

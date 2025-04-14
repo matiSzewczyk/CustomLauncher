@@ -1,7 +1,5 @@
 package com.matis.customlauncher.ui.appsearch
 
-import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.device.PackagesApi
@@ -36,9 +34,6 @@ class AppSearchViewModel @Inject constructor(
         uiState.update { it.copy(query = query) }
     }
 
-    fun onPackageIconRequested(packageName: String): Drawable? =
-        packagesApi.getPackageIcon(packageName)
-
     fun onApplicationClicked(packageName: String) {
         packagesApi.openApplication(packageName)
     }
@@ -55,10 +50,7 @@ class AppSearchViewModel @Inject constructor(
                 .debounce(timeoutMillis = 300)
                 .distinctUntilChanged()
                 .flatMapLatest { packagesService.getApplications(query = it) }
-                .collect { apps ->
-                    Log.d("TEST", "Applications: ${apps.map { it.label }}")
-                    uiState.update { it.copy(applications = apps) }
-                }
+                .collect { apps -> uiState.update { it.copy(applications = apps) } }
         }
     }
 }
