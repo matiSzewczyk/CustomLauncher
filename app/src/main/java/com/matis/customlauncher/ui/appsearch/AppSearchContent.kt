@@ -2,7 +2,6 @@ package com.matis.customlauncher.ui.appsearch
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,9 +32,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.domain.data.model.PackageInfoDto
+import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
@@ -45,7 +45,8 @@ fun AppSearchContent(
     uiState: UiState,
     onBackPressed: () -> Unit,
     clearFocusAndHideKeyboard: () -> Unit,
-    onApplicationClicked: (String) -> Unit
+    onApplicationClicked: (String) -> Unit,
+    onAddToHomeScreenClicked: (HomeScreenApplicationDto) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
@@ -82,10 +83,11 @@ fun AppSearchContent(
                     .onFocusChanged { isSearchFocused.value = it.isFocused }
             )
         }
-        items(uiState.applications) { packageInfo ->
+        items(uiState.applications) { application ->
             TransparentApplication(
-                packageInfo = packageInfo,
-                onApplicationClicked = { onApplicationClicked(packageInfo.packageName) }
+                application = application,
+                onApplicationClicked = { onApplicationClicked(application.packageName) },
+                onAddToHomeScreenClicked = { onAddToHomeScreenClicked(application) }
             )
         }
     }
@@ -94,23 +96,31 @@ fun AppSearchContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
-    packageInfo: PackageInfoDto,
-    onApplicationClicked: () -> Unit
+    application: HomeScreenApplicationDto,
+    onApplicationClicked: () -> Unit,
+    onAddToHomeScreenClicked: () -> Unit
 ) {
+    var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(84.dp)
-            .combinedClickable(
-                onClick = { onApplicationClicked() },
-                onLongClick = { menuExpanded = true },
-            ),
+            .pointerInput(true) {
+                detectTapGestures(
+                    onTap = { onApplicationClicked() },
+                    onLongPress = { offset ->
+                        menuExpanded = true
+                        pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
+                    }
+                )
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = context.getApplicationIcon(packageInfo.packageName),
+            model = context.getApplicationIcon(application.packageName),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -118,15 +128,16 @@ private fun TransparentApplication(
         )
         DropdownMenu(
             expanded = menuExpanded,
-            onDismissRequest = { menuExpanded = false }
+            onDismissRequest = { menuExpanded = false },
+            offset = pressOffset.copy(y = pressOffset.y - 82.dp),
         ) {
             DropdownMenuItem(
                 text = { Text(text = "Add to home screen") },
-                onClick = { println("Add to home screen clicked") }, // TODO: Implement this action
+                onClick = { onAddToHomeScreenClicked() }
             )
         }
         Text(
-            text = packageInfo.label,
+            text = application.label,
             color = Color.White
         )
     }

@@ -54,7 +54,8 @@ fun MainScreenContent(
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
-                    onApplicationClicked = viewModel::onApplicationClicked
+                    onApplicationClicked = viewModel::onApplicationClicked,
+                    onAddToHomeScreenClicked = viewModel::onAddToHomeScreenClicked
                 )
             }
         }

@@ -1,6 +1,7 @@
-package com.matis.customlauncher.data
+package com.matis.customlauncher.data.dal
 
 import com.matis.customlauncher.device.PackagesApi
+import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
 import com.matis.customlauncher.domain.data.model.PackageInfoDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -9,7 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class PackagesRepository @Inject constructor(
-    private val packagesApi: PackagesApi
+    private val packagesApi: PackagesApi,
+    private val homeScreenDao: HomeScreenDao
 ) {
 
     var applications = MutableStateFlow<List<PackageInfoDto>>(emptyList())
@@ -28,5 +30,9 @@ class PackagesRepository @Inject constructor(
 
     fun removeApplication(packageName: String) {
         applications.value = applications.value.filterNot { it.packageName == packageName }
+    }
+
+    fun insertNewHomeScreenApplication(applicationDto: HomeScreenApplicationDto) {
+        homeScreenDao.insertHomeScreenApplication(applicationDto)
     }
 }

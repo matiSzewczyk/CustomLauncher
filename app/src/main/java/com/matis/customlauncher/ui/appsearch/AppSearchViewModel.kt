@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.device.PackagesApi
 import com.matis.customlauncher.domain.PackagesService
+import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,6 +37,10 @@ class AppSearchViewModel @Inject constructor(
 
     fun onApplicationClicked(packageName: String) {
         packagesApi.openApplication(packageName)
+    }
+
+    fun onAddToHomeScreenClicked(application: HomeScreenApplicationDto) {
+        packagesService.addToHomeScreen(application)
     }
 
     override fun onCleared() {

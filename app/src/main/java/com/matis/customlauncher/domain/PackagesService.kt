@@ -1,6 +1,7 @@
 package com.matis.customlauncher.domain
 
-import com.matis.customlauncher.data.PackagesRepository
+import com.matis.customlauncher.data.dal.PackagesRepository
+import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
 import com.matis.customlauncher.domain.data.model.PackageInfoDto
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -21,4 +22,8 @@ class PackagesService @Inject constructor(
     fun getApplications(query: String): Flow<List<PackageInfoDto>> =
         repository.applications
             .map { apps -> apps.filter { it.label.contains(query, ignoreCase = true) } }
+
+    fun addToHomeScreen(application: HomeScreenApplicationDto) {
+        repository.insertNewHomeScreenApplication(application)
+    }
 }
