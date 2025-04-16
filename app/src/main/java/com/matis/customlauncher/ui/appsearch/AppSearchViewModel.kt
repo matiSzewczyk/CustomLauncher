@@ -2,7 +2,6 @@ package com.matis.customlauncher.ui.appsearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matis.customlauncher.device.PackagesApi
 import com.matis.customlauncher.domain.PackagesService
 import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.matis.customlauncher.device.PackagesApi
 import com.matis.customlauncher.navigation.MainNavHost
 import com.matis.customlauncher.ui.rememberAppState
 import com.matis.customlauncher.ui.theme.CustomLauncherTheme

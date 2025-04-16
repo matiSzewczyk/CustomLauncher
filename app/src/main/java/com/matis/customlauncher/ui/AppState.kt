@@ -2,7 +2,6 @@ package com.matis.customlauncher.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.matis.customlauncher.device.PackagesApi
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
