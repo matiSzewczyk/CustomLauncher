@@ -8,24 +8,16 @@ import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.content.pm.ResolveInfo
 import com.matis.customlauncher.model.ApplicationInfoDto
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 internal class ApplicationsApiImpl @Inject constructor(
     private val context: Context
 ) : ApplicationsApi {
 
-    private val _isDefaultHomeApp = MutableStateFlow(false)
-    val isDefaultHomeApp get() = _isDefaultHomeApp.asStateFlow()
-
-    override fun evaluateHomeApplicationStatus() {
-        val resolveInfo = Intent(ACTION_MAIN)
+    override fun isDefaultHomeApplication(): Boolean =
+        Intent(ACTION_MAIN)
             .apply { addCategory(Intent.CATEGORY_HOME) }
             .let { intent -> context.packageManager.resolveActivity(intent, MATCH_DEFAULT_ONLY) }
-
-        _isDefaultHomeApp.update { resolveInfo?.activityInfo?.packageName == context.packageName }
-    }
+            ?.run { activityInfo?.packageName == context.packageName } == true
 
     override fun getInstalledPackages(): List<ApplicationInfoDto> =
         queryLauncherActivities().map { it.toDomain() }
@@ -35,11 +27,11 @@ internal class ApplicationsApiImpl @Inject constructor(
             .find { it.activityInfo.packageName == packageName }
             ?.toDomain()
 
-    private fun queryLauncherActivities(): List<ResolveInfo> =
-        context.packageManager.queryIntentActivities(
-            Intent(ACTION_MAIN).apply { addCategory(CATEGORY_LAUNCHER) },
-            0
-        )
+    private fun queryLauncherActivities(): List<ResolveInfo> {
+        val intent = Intent(ACTION_MAIN).apply { addCategory(CATEGORY_LAUNCHER) }
+
+        return context.packageManager.queryIntentActivities(intent, 0)
+    }
 
     private fun ResolveInfo.toDomain(): ApplicationInfoDto =
         ApplicationInfoDto(

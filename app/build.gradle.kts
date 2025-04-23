@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,9 +11,9 @@ plugins {
 
 android {
     namespace = "com.matis.customlauncher"
-    compileSdk = 35
 
     defaultConfig {
+        compileSdk = 35
         applicationId = "com.matis.customlauncher"
         minSdk = 24
         targetSdk = 35
@@ -31,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -43,6 +45,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
+    implementation(project(":core:data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

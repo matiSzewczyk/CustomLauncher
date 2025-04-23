@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
@@ -34,7 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
+import com.matis.customlauncher.model.HomeScreenApplicationDto
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 

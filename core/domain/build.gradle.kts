@@ -6,16 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.matis.customlauncher.core.database"
+    namespace = "com.matis.customlauncher.core.domain"
 
     compileSdk = 35
 }
 
 dependencies {
-    api(project(":core:model"))
+    implementation(project(":core:data"))
+    implementation(project(":core:model"))
 
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 }

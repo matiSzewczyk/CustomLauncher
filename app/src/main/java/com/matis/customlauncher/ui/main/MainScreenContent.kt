@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 fun MainScreenContent(
     viewModel: AppSearchViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val appSearchUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -54,7 +56,10 @@ fun MainScreenContent(
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
-                    onApplicationClicked = viewModel::onApplicationClicked,
+                    onApplicationClicked = { packageName ->
+                        context.packageManager.getLaunchIntentForPackage(packageName)
+                            ?.let { intent -> context.startActivity(intent) }
+                    },
                     onAddToHomeScreenClicked = viewModel::onAddToHomeScreenClicked
                 )
             }

@@ -7,6 +7,8 @@ plugins {
 
 android {
     namespace = "com.matis.customlauncher.core.data"
+
+    compileSdk = 35
 }
 
 dependencies {

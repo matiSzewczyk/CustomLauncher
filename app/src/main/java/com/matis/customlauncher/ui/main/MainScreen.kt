@@ -6,19 +6,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matis.customlauncher.ui.AppState
 
 @Composable
 fun MainScreen(
-    appState: AppState,
-    viewModel: MainViewModel = hiltViewModel()
+    appState: AppState
 ) {
     val hasDefaultLauncherPermission by appState.hasDefaultLauncherPermission.collectAsStateWithLifecycle()
     val context = LocalContext.current
     BackHandler {
-        if (hasDefaultLauncherPermission) viewModel.onBackPressed()
+        if (hasDefaultLauncherPermission) Unit
         else (context as? MainActivity)?.onBackPressedDispatcher?.onBackPressed()
     }
     if (!hasDefaultLauncherPermission) NotDefaultLauncherContent(

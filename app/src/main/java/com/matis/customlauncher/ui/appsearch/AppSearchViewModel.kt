@@ -2,8 +2,9 @@ package com.matis.customlauncher.ui.appsearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.matis.customlauncher.domain.PackagesService
-import com.matis.customlauncher.domain.data.model.HomeScreenApplicationDto
+import com.matis.customlauncher.domain.AddApplicationToHomeScreen
+import com.matis.customlauncher.domain.GetApplicationsMatchingQuery
+import com.matis.customlauncher.model.HomeScreenApplicationDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,8 +20,8 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AppSearchViewModel @Inject constructor(
-    private val packagesService: PackagesService,
-    private val packagesApi: PackagesApi
+    private val addApplicationToHomeScreen: AddApplicationToHomeScreen,
+    private val getApplicationsMatchingQuery: GetApplicationsMatchingQuery
 ) : ViewModel() {
 
     var uiState = MutableStateFlow(UiState())
@@ -34,12 +35,8 @@ class AppSearchViewModel @Inject constructor(
         uiState.update { it.copy(query = query) }
     }
 
-    fun onApplicationClicked(packageName: String) {
-        packagesApi.openApplication(packageName)
-    }
-
     fun onAddToHomeScreenClicked(application: HomeScreenApplicationDto) {
-        packagesService.addToHomeScreen(application)
+        viewModelScope.launch { addApplicationToHomeScreen(application) }
     }
 
     override fun onCleared() {
@@ -53,8 +50,8 @@ class AppSearchViewModel @Inject constructor(
                 .map { it.query }
                 .debounce(timeoutMillis = 300)
                 .distinctUntilChanged()
-                .flatMapLatest { packagesService.getApplications(query = it) }
-                .collect { apps -> uiState.update { it.copy(applications = apps) } }
+                .flatMapLatest { query -> getApplicationsMatchingQuery(query) }
+                .collect { filteredApps -> uiState.update { it.copy(applications = filteredApps) } }
         }
     }
 }

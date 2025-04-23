@@ -1,6 +1,5 @@
 package com.matis.customlauncher.core.data.repository
 
-import com.matis.core.customlauncher.database.dao.HomeScreenApplicationDao
 import com.matis.customlauncher.applications.ApplicationsApi
 import com.matis.customlauncher.model.ApplicationInfoDto
 import javax.inject.Inject
@@ -10,9 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 internal class InstalledApplicationsRepositoryImpl @Inject constructor(
-    private val applicationsApi: ApplicationsApi,
-    private val homeScreenApplicationDao: HomeScreenApplicationDao
-) : InstalledApplicationsRepository{
+    private val applicationsApi: ApplicationsApi
+) : InstalledApplicationsRepository {
 
     var applications = MutableStateFlow<List<ApplicationInfoDto>>(emptyList())
         private set
@@ -27,6 +25,9 @@ internal class InstalledApplicationsRepositoryImpl @Inject constructor(
         applicationsApi.getPackageInfo(packageName)
             ?.let { applications.value = applications.value + it }
     }
+
+    override fun getApplications(): MutableStateFlow<List<ApplicationInfoDto>> =
+        applications
 
     override fun removeApplication(packageName: String) {
         applications.value = applications.value.filterNot { it.packageName == packageName }

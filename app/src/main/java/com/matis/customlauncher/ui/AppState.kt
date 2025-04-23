@@ -2,22 +2,23 @@ package com.matis.customlauncher.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.matis.customlauncher.core.data.repository.EnvironmentRepository
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun rememberAppState(
-    packagesApi: PackagesApi
+    repository: EnvironmentRepository,
 ): AppState =
-    remember(packagesApi) {
+    remember(repository) {
         AppState(
-            packagesApi = packagesApi
+            repository = repository
         )
     }
 
 class AppState(
-    packagesApi: PackagesApi
+    repository: EnvironmentRepository
 ) {
 
     val hasDefaultLauncherPermission: StateFlow<Boolean> =
-        packagesApi.isDefaultHomeApp
+        repository.isDefaultHomeApp()
 }
