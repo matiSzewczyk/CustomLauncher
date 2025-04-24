@@ -35,7 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.model.HomeScreenApplicationDto
+import com.matis.customlauncher.model.ApplicationInfoDto
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
@@ -46,7 +46,7 @@ fun AppSearchContent(
     onBackPressed: () -> Unit,
     clearFocusAndHideKeyboard: () -> Unit,
     onApplicationClicked: (String) -> Unit,
-    onAddToHomeScreenClicked: (HomeScreenApplicationDto) -> Unit
+    onAddToHomeScreenClicked: (ApplicationInfoDto) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
@@ -96,7 +96,7 @@ fun AppSearchContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
-    application: HomeScreenApplicationDto,
+    application: ApplicationInfoDto,
     onApplicationClicked: () -> Unit,
     onAddToHomeScreenClicked: () -> Unit
 ) {

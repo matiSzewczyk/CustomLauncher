@@ -7,10 +7,11 @@ import android.content.Intent.CATEGORY_LAUNCHER
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.content.pm.ResolveInfo
 import com.matis.customlauncher.model.ApplicationInfoDto
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 internal class ApplicationsApiImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : ApplicationsApi {
 
     override fun isDefaultHomeApplication(): Boolean =

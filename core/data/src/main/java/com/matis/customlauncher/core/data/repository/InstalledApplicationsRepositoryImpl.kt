@@ -26,7 +26,7 @@ internal class InstalledApplicationsRepositoryImpl @Inject constructor(
             ?.let { applications.value = applications.value + it }
     }
 
-    override fun getApplications(): MutableStateFlow<List<ApplicationInfoDto>> =
+    override fun fetchApplications(): MutableStateFlow<List<ApplicationInfoDto>> =
         applications
 
     override fun removeApplication(packageName: String) {

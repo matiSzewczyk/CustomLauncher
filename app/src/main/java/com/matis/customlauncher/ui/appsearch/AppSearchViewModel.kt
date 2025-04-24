@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.domain.AddApplicationToHomeScreen
 import com.matis.customlauncher.domain.GetApplicationsMatchingQuery
-import com.matis.customlauncher.model.HomeScreenApplicationDto
+import com.matis.customlauncher.model.ApplicationInfoDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +35,7 @@ class AppSearchViewModel @Inject constructor(
         uiState.update { it.copy(query = query) }
     }
 
-    fun onAddToHomeScreenClicked(application: HomeScreenApplicationDto) {
+    fun onAddToHomeScreenClicked(application: ApplicationInfoDto) {
         viewModelScope.launch { addApplicationToHomeScreen(application) }
     }
 

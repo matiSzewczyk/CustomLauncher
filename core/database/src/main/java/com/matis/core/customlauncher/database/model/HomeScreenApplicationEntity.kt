@@ -15,18 +15,11 @@ data class HomeScreenApplicationEntity(
     @PrimaryKey
     @ColumnInfo(name = "package_name") val packageName: String,
     @ColumnInfo(name = "label") val label: String,
-    @ColumnInfo(name = "position_index") val position: Int
+    @ColumnInfo(name = "position") val position: Int
 )
 
 fun HomeScreenApplicationDto.toDatabase(): HomeScreenApplicationEntity =
     HomeScreenApplicationEntity(
-        packageName = packageName,
-        label = label,
-        position = position
-    )
-
-fun HomeScreenApplicationEntity.toDomain(): HomeScreenApplicationDto =
-    HomeScreenApplicationDto(
         packageName = packageName,
         label = label,
         position = position

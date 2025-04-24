@@ -11,7 +11,7 @@ class GetApplicationsMatchingQuery @Inject constructor(
 ) {
 
     operator fun invoke(query: String): Flow<List<ApplicationInfoDto>> =
-        repository.getApplications()
+        repository.fetchApplications()
             .map { apps ->
                 apps.filter { it.label.contains(query, ignoreCase = true) }
             }

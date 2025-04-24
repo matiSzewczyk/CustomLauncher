@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 interface InstalledApplicationsRepository {
     fun insertApplication(packageName: String)
-    fun getApplications(): MutableStateFlow<List<ApplicationInfoDto>>
+    fun fetchApplications(): MutableStateFlow<List<ApplicationInfoDto>>
     fun removeApplication(packageName: String)
 }
