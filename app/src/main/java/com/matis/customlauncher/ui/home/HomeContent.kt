@@ -1,7 +1,6 @@
 package com.matis.customlauncher.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -94,7 +93,8 @@ private fun TransparentApplication(
                     }
                 )
             },
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
             model = context.getApplicationIcon(application.packageName),
@@ -126,7 +126,6 @@ fun EmptyApplication() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
             .aspectRatio(1f)
     ) {
     }
