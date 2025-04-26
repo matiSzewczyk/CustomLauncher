@@ -1,6 +1,5 @@
 package com.matis.customlauncher.ui.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,7 +68,6 @@ fun HomeContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
     application: ApplicationItem,
@@ -122,7 +120,6 @@ private fun TransparentApplication(
 
 @Composable
 fun EmptyApplication() {
-    // TODO: Temporary
     Box(
         modifier = Modifier
             .fillMaxWidth()

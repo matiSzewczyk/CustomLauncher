@@ -12,7 +12,11 @@ class GetApplicationsMatchingQuery @Inject constructor(
 
     operator fun invoke(query: String): Flow<List<ApplicationInfoDto>> =
         repository.fetchApplications()
-            .map { apps ->
-                apps.filter { it.label.contains(query, ignoreCase = true) }
-            }
+            .map { apps -> apps.filterLabelContaining(query).sortAlphabetically() }
+
+    private fun List<ApplicationInfoDto>.filterLabelContaining(query: String): List<ApplicationInfoDto> =
+        filter { it.label.contains(query, ignoreCase = true) }
+
+    private fun List<ApplicationInfoDto>.sortAlphabetically(): List<ApplicationInfoDto> =
+        sortedBy { it.label }
 }
