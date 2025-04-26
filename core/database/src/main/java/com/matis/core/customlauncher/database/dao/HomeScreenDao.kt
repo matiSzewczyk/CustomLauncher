@@ -17,6 +17,9 @@ abstract class HomeScreenApplicationDao {
     @Query("SELECT * FROM home_screen_application")
     abstract fun fetchAllHomeScreenApplications(): Flow<List<HomeScreenApplicationEntity>>
 
+    @Query("DELETE FROM home_screen_application WHERE package_name = :packageName")
+    abstract fun removeApplicationFromHomeScreen(packageName: String)
+
     @Query(
         """
     SELECT COALESCE(MIN(next_index), 0) AS first_available_position

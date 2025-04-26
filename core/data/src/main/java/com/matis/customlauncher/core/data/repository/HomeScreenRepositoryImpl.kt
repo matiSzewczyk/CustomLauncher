@@ -19,4 +19,8 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
     override fun fetchHomeScreenApplications(): Flow<List<HomeScreenApplicationDto>> =
         dao.fetchAllHomeScreenApplications()
             .map { applications -> applications.map { it.toDomain() } }
+
+    override fun removeApplicationFromHomeScreen(packageName: String) {
+        dao.removeApplicationFromHomeScreen(packageName)
+    }
 }

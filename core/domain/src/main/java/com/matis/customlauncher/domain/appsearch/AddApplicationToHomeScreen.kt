@@ -1,4 +1,4 @@
-package com.matis.customlauncher.domain
+package com.matis.customlauncher.domain.appsearch
 
 import com.matis.customlauncher.core.data.repository.HomeScreenRepository
 import com.matis.customlauncher.model.ApplicationInfoDto

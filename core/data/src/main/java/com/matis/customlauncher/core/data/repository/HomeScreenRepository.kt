@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface HomeScreenRepository {
     fun insertHomeScreenApplication(application: ApplicationInfoDto)
     fun fetchHomeScreenApplications(): Flow<List<HomeScreenApplicationDto>>
+    fun removeApplicationFromHomeScreen(packageName: String)
 }

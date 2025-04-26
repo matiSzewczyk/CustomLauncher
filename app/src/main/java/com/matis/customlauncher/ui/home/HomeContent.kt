@@ -29,9 +29,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 // TODO: Only temporary
@@ -39,9 +38,10 @@ const val COLUMNS = 3
 
 @Composable
 fun HomeContent(
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    uiState: UiState,
+    onApplicationClicked: (String) -> Unit,
+    onRemoveFromHomeScreenClicked: (String) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LazyVerticalGrid(
         columns = GridCells.Fixed(COLUMNS),
         userScrollEnabled = false,
@@ -56,8 +56,12 @@ fun HomeContent(
                     .aspectRatio(1f),
                 contentAlignment = Alignment.Center
             ) {
-                if (app is HomeScreenApplicationViewItem.ApplicationItem) {
-                    TransparentApplication(app, {}, {})
+                if (app is ApplicationItem) {
+                    TransparentApplication(
+                        application = app,
+                        onApplicationClicked = onApplicationClicked,
+                        onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
+                    )
                 } else {
                     EmptyApplication()
                 }
@@ -69,9 +73,9 @@ fun HomeContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
-    application: HomeScreenApplicationViewItem.ApplicationItem,
-    onApplicationClicked: () -> Unit,
-    onAddToHomeScreenClicked: () -> Unit
+    application: ApplicationItem,
+    onApplicationClicked: (String) -> Unit,
+    onRemoveFromHomeScreenClicked: (String) -> Unit
 ) {
     var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -83,7 +87,7 @@ private fun TransparentApplication(
             .aspectRatio(1f)
             .pointerInput(true) {
                 detectTapGestures(
-                    onTap = { onApplicationClicked() },
+                    onTap = { onApplicationClicked(application.packageName) },
                     onLongPress = { offset ->
                         menuExpanded = true
                         pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
@@ -105,8 +109,8 @@ private fun TransparentApplication(
             offset = pressOffset.copy(y = pressOffset.y - 82.dp),
         ) {
             DropdownMenuItem(
-                text = { Text(text = "Add to home screen") },
-                onClick = { onAddToHomeScreenClicked() }
+                text = { Text(text = "Remove from Home Screen") },
+                onClick = { onRemoveFromHomeScreenClicked(application.packageName) }
             )
         }
         Text(

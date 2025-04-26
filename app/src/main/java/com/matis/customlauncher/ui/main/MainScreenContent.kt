@@ -19,15 +19,18 @@ import com.matis.customlauncher.ui.Page
 import com.matis.customlauncher.ui.appsearch.AppSearchContent
 import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
 import com.matis.customlauncher.ui.home.HomeContent
+import com.matis.customlauncher.ui.home.HomeScreenViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreenContent(
-    viewModel: AppSearchViewModel = hiltViewModel()
+    appSearchViewModel: AppSearchViewModel = hiltViewModel(),
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val appSearchUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val appSearchUiState by appSearchViewModel.uiState.collectAsStateWithLifecycle()
+    val homeScreenUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -36,6 +39,11 @@ fun MainScreenContent(
     val clearFocusAndHideKeyboard: () -> Unit = {
         focusManager.clearFocus()
         softwareKeyboardController?.hide()
+    }
+
+    val onApplicationClicked: (String) -> Unit = { packageName ->
+        context.packageManager.getLaunchIntentForPackage(packageName)
+            ?.let { intent -> context.startActivity(intent) }
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -50,17 +58,18 @@ fun MainScreenContent(
     ) {
         VerticalPager(state = pagerState) {
             when (it) {
-                Page.HOME.pageNumber -> HomeContent()
+                Page.HOME.pageNumber -> HomeContent(
+                    uiState = homeScreenUiState,
+                    onApplicationClicked = onApplicationClicked,
+                    onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked
+                )
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,
-                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onSearchQueryChanged = appSearchViewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
-                    onApplicationClicked = { packageName ->
-                        context.packageManager.getLaunchIntentForPackage(packageName)
-                            ?.let { intent -> context.startActivity(intent) }
-                    },
-                    onAddToHomeScreenClicked = viewModel::onAddToHomeScreenClicked
+                    onApplicationClicked = onApplicationClicked,
+                    onAddToHomeScreenClicked = appSearchViewModel::onAddToHomeScreenClicked
                 )
             }
         }
