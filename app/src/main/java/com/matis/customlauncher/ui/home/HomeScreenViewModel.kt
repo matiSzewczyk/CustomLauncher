@@ -42,7 +42,7 @@ class HomeScreenViewModel @Inject constructor(
     private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> =
         buildList {
             repeat(GRID_SIZE) { position ->
-                val appAtPosition = homeScreenApplications.getOrNull(position)
+                val appAtPosition = homeScreenApplications.firstOrNull { it.position == position }
 
                 if (appAtPosition != null) add(appAtPosition)
                 else add(EmptyItem(position))
