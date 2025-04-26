@@ -39,16 +39,12 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) { removeApplicationFromHomeScreen(packageName) }
     }
 
-    private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> =
-        buildList {
-            repeat(GRID_SIZE) { position ->
-                val appAtPosition = homeScreenApplications.firstOrNull { it.position == position }
-
-                if (appAtPosition != null) add(appAtPosition)
-                else add(EmptyItem(position))
-
-            }
+    private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> {
+        val positionMap = homeScreenApplications.associateBy { it.position }
+        return List(GRID_SIZE) { position ->
+            positionMap[position] ?: EmptyItem(position)
         }
+    }
 
     companion object {
         // TODO: Temporary, use customizable, user picked values
