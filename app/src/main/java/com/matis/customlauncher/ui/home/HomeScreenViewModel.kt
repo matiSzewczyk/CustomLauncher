@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.domain.home.GetHomeScreenApplications
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
+import com.matis.customlauncher.model.HomeScreenApplicationDto
 import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.EmptyItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +30,7 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getHomeScreenApplications()
                 .distinctUntilChanged()
-                .map { applications -> applications.map { it.toView() } }
+                .map { it.map(HomeScreenApplicationDto::toView) }
                 .map { getGridItems(it) }
                 .collect { gridItems -> _uiState.update { it.copy(applications = gridItems) } }
         }

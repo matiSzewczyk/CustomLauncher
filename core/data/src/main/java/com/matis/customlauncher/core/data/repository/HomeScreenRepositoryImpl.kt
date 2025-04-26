@@ -1,6 +1,7 @@
 package com.matis.customlauncher.core.data.repository
 
 import com.matis.core.customlauncher.database.dao.HomeScreenApplicationDao
+import com.matis.core.customlauncher.database.model.HomeScreenApplicationEntity
 import com.matis.core.customlauncher.database.model.toDomain
 import com.matis.customlauncher.model.ApplicationInfoDto
 import com.matis.customlauncher.model.HomeScreenApplicationDto
@@ -18,7 +19,7 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
 
     override fun fetchHomeScreenApplications(): Flow<List<HomeScreenApplicationDto>> =
         dao.fetchAllHomeScreenApplications()
-            .map { applications -> applications.map { it.toDomain() } }
+            .map { it.map(HomeScreenApplicationEntity::toDomain) }
 
     override fun removeApplicationFromHomeScreen(packageName: String) {
         dao.removeApplicationFromHomeScreen(packageName)

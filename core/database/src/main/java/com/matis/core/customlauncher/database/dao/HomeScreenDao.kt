@@ -22,15 +22,17 @@ abstract class HomeScreenApplicationDao {
 
     @Query(
         """
-    SELECT COALESCE(MIN(next_index), 0) AS first_available_position
-    FROM (
-        SELECT t1.position + 1 AS next_index
-        FROM home_screen_application t1
-        LEFT JOIN home_screen_application t2
-            ON t1.position + 1 = t2.position
-        WHERE t2.position IS NULL
-    )
-"""
+            SELECT COALESCE(
+                (SELECT 0
+                 WHERE NOT EXISTS (SELECT 1 FROM home_screen_application WHERE position = 0)),
+                (SELECT MIN(t1.position + 1)
+                 FROM home_screen_application t1
+                 LEFT JOIN home_screen_application t2
+                 ON t1.position + 1 = t2.position
+                 WHERE t2.position IS NULL), 
+                0
+            ) AS first_available_position        
+        """
     )
     abstract fun fetchFirstAvailablePosition(): Int
 
