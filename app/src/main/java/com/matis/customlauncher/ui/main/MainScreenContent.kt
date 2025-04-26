@@ -1,5 +1,7 @@
 package com.matis.customlauncher.ui.main
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,6 +46,7 @@ fun MainScreenContent(
     val onApplicationClicked: (String) -> Unit = { packageName ->
         context.packageManager.getLaunchIntentForPackage(packageName)
             ?.let { intent -> context.startActivity(intent) }
+            ?: context.showToast("Unable to launch application")
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -74,4 +77,9 @@ fun MainScreenContent(
             }
         }
     }
+}
+
+private fun Context.showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT)
+        .show()
 }
