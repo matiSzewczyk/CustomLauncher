@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.matis.core.customlauncher.database.model.HomeScreenApplicationEntity
 import com.matis.customlauncher.model.ApplicationInfoDto
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class HomeScreenApplicationDao {
@@ -14,7 +15,7 @@ abstract class HomeScreenApplicationDao {
     abstract fun insertHomeScreenApplication(data: HomeScreenApplicationEntity)
 
     @Query("SELECT * FROM home_screen_application")
-    abstract fun fetchAllHomeScreenApplications(): List<HomeScreenApplicationEntity>
+    abstract fun fetchAllHomeScreenApplications(): Flow<List<HomeScreenApplicationEntity>>
 
     @Query(
         """

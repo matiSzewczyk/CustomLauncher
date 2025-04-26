@@ -7,6 +7,7 @@ import com.matis.customlauncher.domain.GetApplicationsMatchingQuery
 import com.matis.customlauncher.model.ApplicationInfoDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,7 @@ class AppSearchViewModel @Inject constructor(
     }
 
     fun onAddToHomeScreenClicked(application: ApplicationInfoDto) {
-        viewModelScope.launch { addApplicationToHomeScreen(application) }
+        viewModelScope.launch(Dispatchers.IO) { addApplicationToHomeScreen(application) }
     }
 
     override fun onCleared() {

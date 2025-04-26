@@ -24,3 +24,10 @@ fun HomeScreenApplicationDto.toDatabase(): HomeScreenApplicationEntity =
         label = label,
         position = position
     )
+
+fun HomeScreenApplicationEntity.toDomain(): HomeScreenApplicationDto =
+    HomeScreenApplicationDto(
+        packageName = packageName,
+        label = label,
+        position = position
+    )

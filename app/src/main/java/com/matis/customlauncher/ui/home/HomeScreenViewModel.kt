@@ -1,0 +1,51 @@
+package com.matis.customlauncher.ui.home
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.matis.customlauncher.domain.GetHomeScreenApplications
+import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
+import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.EmptyItem
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
+    private val getHomeScreenApplications: GetHomeScreenApplications
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState get() = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            getHomeScreenApplications()
+                .distinctUntilChanged()
+                .map { applications -> applications.map { it.toView() } }
+                .map { getGridItems(it) }
+                .collect { gridItems -> _uiState.update { it.copy(applications = gridItems) } }
+        }
+    }
+
+    private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> =
+        buildList {
+            repeat(GRID_SIZE) { position ->
+                val appAtPosition = homeScreenApplications.getOrNull(position)
+
+                if (appAtPosition != null) add(appAtPosition)
+                else add(EmptyItem(position))
+
+            }
+        }
+
+    companion object {
+        // TODO: Temporary, use customizable, user picked values
+        private const val GRID_SIZE = 12
+    }
+}
