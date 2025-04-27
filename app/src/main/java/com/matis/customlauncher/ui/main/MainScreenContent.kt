@@ -9,7 +9,10 @@ import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +39,7 @@ fun MainScreenContent(
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val pagerState = rememberPagerState(pageCount = { 2 })
+    var userScrollEnabled by remember { mutableStateOf(true) }
 
     val clearFocusAndHideKeyboard: () -> Unit = {
         focusManager.clearFocus()
@@ -58,12 +62,17 @@ fun MainScreenContent(
             .fillMaxSize()
             .background(colors[pagerState.currentPage])
     ) {
-        VerticalPager(state = pagerState) {
+        VerticalPager(
+            state = pagerState,
+            userScrollEnabled = userScrollEnabled
+        ) {
             when (it) {
                 Page.HOME.pageNumber -> HomeContent(
                     onApplicationClicked = onApplicationClicked,
                     onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
-                    onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed
+                    onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
+                    enableUserScroll = { userScrollEnabled = true },
+                    disableUserScroll = { userScrollEnabled = false }
                 )
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,

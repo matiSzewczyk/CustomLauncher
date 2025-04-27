@@ -10,14 +10,18 @@ fun HomeContent(
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit
+    onMainScreenLongPressed: () -> Unit,
+    enableUserScroll: () -> Unit,
+    disableUserScroll: () -> Unit
 ) {
     val uiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
     if (uiState.isInEditMode) {
+        disableUserScroll()
         EditModeHomeContent(
             onBackPressed = homeScreenViewModel::onBackPressed
         )
     } else {
+        enableUserScroll()
         DefaultHomeContent(
             uiState = uiState,
             onApplicationClicked = onApplicationClicked,
@@ -26,4 +30,3 @@ fun HomeContent(
         )
     }
 }
-
