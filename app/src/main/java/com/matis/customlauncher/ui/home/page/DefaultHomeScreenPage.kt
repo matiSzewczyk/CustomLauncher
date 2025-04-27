@@ -1,5 +1,6 @@
-package com.matis.customlauncher.ui.home
+package com.matis.customlauncher.ui.home.page
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +38,7 @@ import com.matis.customlauncher.ui.shared.getApplicationIcon
 const val COLUMNS = 3
 
 @Composable
-fun DefaultHomeContent(
+fun DefaultHomeScreenPage(
     uiState: UiState,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
@@ -49,6 +51,10 @@ fun DefaultHomeContent(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxSize()
+            .background(
+                color = if (uiState.isInEditMode) Color.Black.copy(alpha = .4f) else Color.Transparent,
+                shape = MaterialTheme.shapes.extraLarge
+            )
             .pointerInput(null) {
                 detectTapGestures(
                     onLongPress = { onMainScreenLongPressed() }
@@ -135,3 +141,4 @@ fun EmptyApplication() {
     ) {
     }
 }
+

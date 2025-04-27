@@ -35,6 +35,7 @@ fun MainScreenContent(
 ) {
     val context = LocalContext.current
     val appSearchUiState by appSearchViewModel.uiState.collectAsStateWithLifecycle()
+    val homeScreenUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -68,11 +69,13 @@ fun MainScreenContent(
         ) {
             when (it) {
                 Page.HOME.pageNumber -> HomeContent(
+                    uiState = homeScreenUiState,
                     onApplicationClicked = onApplicationClicked,
                     onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
                     onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
                     enableUserScroll = { userScrollEnabled = true },
-                    disableUserScroll = { userScrollEnabled = false }
+                    disableUserScroll = { userScrollEnabled = false },
+                    onBackPressed = homeScreenViewModel::onBackPressed
                 )
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,

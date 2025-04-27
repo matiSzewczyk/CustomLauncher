@@ -1,32 +1,144 @@
 package com.matis.customlauncher.ui.home
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.matis.customlauncher.R
+import com.matis.customlauncher.ui.home.data.model.UiState
+import com.matis.customlauncher.ui.home.page.DefaultHomeScreenPage
 
 @Composable
 fun HomeContent(
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    uiState: UiState,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
     onMainScreenLongPressed: () -> Unit,
     enableUserScroll: () -> Unit,
-    disableUserScroll: () -> Unit
+    disableUserScroll: () -> Unit,
+    onBackPressed: () -> Unit,
 ) {
-    val uiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
-    if (uiState.isInEditMode) {
-        disableUserScroll()
-        EditModeHomeContent(
-            onBackPressed = homeScreenViewModel::onBackPressed
+    // Disable scroll for vertical pager
+    if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
+
+    BackHandler {
+        onBackPressed()
+    }
+
+    Column {
+        HomeScreenPagerSection(
+            uiState = uiState,
+            onApplicationClicked = onApplicationClicked,
+            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+            onMainScreenLongPressed = onMainScreenLongPressed,
+            modifier = Modifier.weight(1f)
         )
-    } else {
-        enableUserScroll()
-        DefaultHomeContent(
+        BottomInteractionSection(isVisible = uiState.isInEditMode)
+    }
+}
+
+@Composable
+fun HomeScreenPagerSection(
+    uiState: UiState,
+    onApplicationClicked: (String) -> Unit,
+    onRemoveFromHomeScreenClicked: (String) -> Unit,
+    onMainScreenLongPressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val animatedPadding by animateDpAsState(
+        targetValue = if (uiState.isInEditMode) 64.dp else 0.dp
+    )
+
+    val state = rememberPagerState(pageCount = { 2 })
+    HorizontalPager(
+        state = state,
+        pageSpacing = 32.dp,
+        contentPadding = PaddingValues(all = animatedPadding),
+        userScrollEnabled = uiState.isInEditMode,
+        modifier = modifier.fillMaxSize()
+    ) {
+        DefaultHomeScreenPage(
             uiState = uiState,
             onApplicationClicked = onApplicationClicked,
             onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
             onMainScreenLongPressed = onMainScreenLongPressed
+        )
+    }
+}
+
+@Composable
+fun BottomInteractionSection(
+    isVisible: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val animatedOffset by animateDpAsState(
+        targetValue = if (isVisible) 0.dp else 64.dp
+    )
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .padding(bottom = animatedOffset),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        EditModeInteractionButton(
+            onClick = {},
+            text = "Settings",
+            icon = painterResource(R.drawable.settings)
+        )
+        EditModeInteractionButton(
+            onClick = {},
+            text = "Wallpaper and style",
+            icon = painterResource(R.drawable.wallpaper)
+        )
+    }
+}
+
+@Composable
+private fun EditModeInteractionButton(
+    onClick: () -> Unit,
+    text: String,
+    icon: Painter
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.pointerInput(null) {
+            detectTapGestures(
+                onTap = { onClick() }
+            )
+        }
+    ) {
+        Icon(
+            painter = icon,
+            tint = Color.White,
+            contentDescription = null
+        )
+        Text(
+            text = text,
+            color = Color.White,
+            maxLines = 2
         )
     }
 }
