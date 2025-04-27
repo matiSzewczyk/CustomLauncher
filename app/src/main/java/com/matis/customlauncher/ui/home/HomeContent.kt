@@ -28,7 +28,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
+import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
+import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 // TODO: Only temporary

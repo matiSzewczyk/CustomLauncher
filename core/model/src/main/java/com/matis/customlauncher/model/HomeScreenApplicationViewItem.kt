@@ -1,7 +1,4 @@
-package com.matis.customlauncher.ui.home
-
-import com.matis.customlauncher.model.HomeScreenApplicationDto
-import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
+package com.matis.customlauncher.model
 
 sealed class HomeScreenApplicationViewItem(
     open val position: Int
@@ -17,8 +14,8 @@ sealed class HomeScreenApplicationViewItem(
     ) : HomeScreenApplicationViewItem(position)
 }
 
-fun HomeScreenApplicationDto.toView(): ApplicationItem =
-    ApplicationItem(
+fun HomeScreenApplicationDto.toView(): HomeScreenApplicationViewItem.ApplicationItem =
+    HomeScreenApplicationViewItem.ApplicationItem(
         packageName = packageName,
         label = label,
         position = position

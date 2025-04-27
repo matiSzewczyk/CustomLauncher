@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.domain.home.GetHomeScreenApplications
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
 import com.matis.customlauncher.model.HomeScreenApplicationDto
-import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.ApplicationItem
-import com.matis.customlauncher.ui.home.HomeScreenApplicationViewItem.EmptyItem
+import com.matis.customlauncher.model.HomeScreenApplicationViewItem
+import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
+import com.matis.customlauncher.model.HomeScreenApplicationViewItem.EmptyItem
+import com.matis.customlauncher.ui.home.data.model.UiState
+import com.matis.customlauncher.model.toView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

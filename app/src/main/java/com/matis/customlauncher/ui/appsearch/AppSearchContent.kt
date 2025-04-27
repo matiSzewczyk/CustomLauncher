@@ -35,7 +35,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.ApplicationInfoViewDto
+import com.matis.customlauncher.ui.appsearch.data.model.UiState
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
@@ -46,7 +47,8 @@ fun AppSearchContent(
     onBackPressed: () -> Unit,
     clearFocusAndHideKeyboard: () -> Unit,
     onApplicationClicked: (String) -> Unit,
-    onAddToHomeScreenClicked: (ApplicationInfoDto) -> Unit
+    onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
+    onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
@@ -87,7 +89,8 @@ fun AppSearchContent(
             TransparentApplication(
                 application = application,
                 onApplicationClicked = { onApplicationClicked(application.packageName) },
-                onAddToHomeScreenClicked = { onAddToHomeScreenClicked(application) }
+                onAddToHomeScreenClicked = onAddToHomeScreenClicked,
+                onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
             )
         }
     }
@@ -96,9 +99,10 @@ fun AppSearchContent(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TransparentApplication(
-    application: ApplicationInfoDto,
+    application: ApplicationInfoViewDto,
     onApplicationClicked: () -> Unit,
-    onAddToHomeScreenClicked: () -> Unit
+    onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
+    onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit
 ) {
     var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -131,14 +135,38 @@ private fun TransparentApplication(
             onDismissRequest = { menuExpanded = false },
             offset = pressOffset.copy(y = pressOffset.y - 82.dp),
         ) {
-            DropdownMenuItem(
-                text = { Text(text = "Add to home screen") },
-                onClick = { onAddToHomeScreenClicked() }
-            )
+            if (application.isHomeScreenApplication) RemoveFromHomeScreenMenuItem {
+                onRemoveFromHomeScreenClicked(application)
+                menuExpanded = false
+            }
+            else AddToHomeScreenMenuItem {
+                onAddToHomeScreenClicked(application)
+                menuExpanded = false
+            }
         }
         Text(
             text = application.label,
             color = Color.White
         )
     }
+}
+
+@Composable
+fun AddToHomeScreenMenuItem(
+    onClick: () -> Unit
+) {
+    DropdownMenuItem(
+        text = { Text(text = "Add to home screen") },
+        onClick = { onClick() }
+    )
+}
+
+@Composable
+fun RemoveFromHomeScreenMenuItem(
+    onClick: () -> Unit
+) {
+    DropdownMenuItem(
+        text = { Text(text = "Remove from home screen") },
+        onClick = { onClick() }
+    )
 }
