@@ -10,6 +10,7 @@ class GetApplicationsMatchingQuery @Inject constructor(
     private val repository: InstalledApplicationsRepository
 ) {
 
+    // TODO: Write tests with a fake repository
     operator fun invoke(query: String): Flow<List<ApplicationInfoDto>> =
         repository.fetchApplications()
             .map { apps -> apps.filterLabelContaining(query).sortAlphabetically() }
