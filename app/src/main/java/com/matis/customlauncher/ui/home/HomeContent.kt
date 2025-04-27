@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.matis.customlauncher.R
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.page.DefaultHomeScreenPage
+import com.matis.customlauncher.ui.home.page.NewHomeScreenPage
 
 @Composable
 fun HomeContent(
@@ -76,13 +77,15 @@ fun HomeScreenPagerSection(
         contentPadding = PaddingValues(all = animatedPadding),
         userScrollEnabled = uiState.isInEditMode,
         modifier = modifier.fillMaxSize()
-    ) {
-        DefaultHomeScreenPage(
+    ) { page ->
+        // TODO: Temporary as visualisation
+        if (page == 0) DefaultHomeScreenPage(
             uiState = uiState,
             onApplicationClicked = onApplicationClicked,
             onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
             onMainScreenLongPressed = onMainScreenLongPressed
         )
+        else NewHomeScreenPage()
     }
 }
 
