@@ -8,8 +8,8 @@ import com.matis.customlauncher.model.HomeScreenApplicationDto
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.EmptyItem
-import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.model.toView
+import com.matis.customlauncher.ui.home.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +41,14 @@ class HomeScreenViewModel @Inject constructor(
 
     fun onRemoveFromHomeScreenClicked(packageName: String) {
         viewModelScope.launch(Dispatchers.IO) { removeApplicationFromHomeScreen(packageName) }
+    }
+
+    fun onHomeScreenLongPressed() {
+        _uiState.update { it.copy(isInEditMode = true) }
+    }
+
+    fun onBackPressed() {
+        _uiState.update { it.copy(isInEditMode = false) }
     }
 
     private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> {

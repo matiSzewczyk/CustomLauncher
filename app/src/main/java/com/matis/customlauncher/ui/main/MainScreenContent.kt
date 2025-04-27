@@ -32,7 +32,6 @@ fun MainScreenContent(
 ) {
     val context = LocalContext.current
     val appSearchUiState by appSearchViewModel.uiState.collectAsStateWithLifecycle()
-    val homeScreenUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -62,9 +61,9 @@ fun MainScreenContent(
         VerticalPager(state = pagerState) {
             when (it) {
                 Page.HOME.pageNumber -> HomeContent(
-                    uiState = homeScreenUiState,
                     onApplicationClicked = onApplicationClicked,
-                    onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked
+                    onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
+                    onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed
                 )
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,
