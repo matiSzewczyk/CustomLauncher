@@ -2,24 +2,23 @@ package com.matis.customlauncher.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
+import androidx.navigation.compose.composable
 import com.matis.customlauncher.ui.AppState
+import com.matis.customlauncher.ui.main.MainScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object MainNavGraph
+data object MainScreen
 
-fun NavGraphBuilder.mainNavGraph(
+fun NavGraphBuilder.mainNavigation(
     appState: AppState,
     navController: NavController
 ) {
-    navigation<MainNavGraph>(startDestination = MainScreen) {
-        mainNavigation(
+    composable<MainScreen> {
+        MainScreen(
             appState = appState,
-            navController = navController
-        )
-        settingsNavigation(
-            onBackPressed = navController::popBackStack
+            onSettingsClicked = navController::navigateToSettings
         )
     }
 }
+

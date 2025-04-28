@@ -38,6 +38,7 @@ fun HomeContent(
     enableUserScroll: () -> Unit,
     disableUserScroll: () -> Unit,
     onBackPressed: () -> Unit,
+    onSettingsClicked: () -> Unit
 ) {
     // Disable scroll for vertical pager
     if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
@@ -54,7 +55,10 @@ fun HomeContent(
             onMainScreenLongPressed = onMainScreenLongPressed,
             modifier = Modifier.weight(1f)
         )
-        BottomInteractionSection(isVisible = uiState.isInEditMode)
+        BottomInteractionSection(
+            isVisible = uiState.isInEditMode,
+            onSettingsClicked = onSettingsClicked
+        )
     }
 }
 
@@ -92,6 +96,7 @@ fun HomeScreenPagerSection(
 @Composable
 fun BottomInteractionSection(
     isVisible: Boolean,
+    onSettingsClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val animatedOffset by animateDpAsState(
@@ -106,7 +111,7 @@ fun BottomInteractionSection(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         EditModeInteractionButton(
-            onClick = {},
+            onClick = { onSettingsClicked() },
             text = "Settings",
             icon = painterResource(R.drawable.settings)
         )

@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreenContent(
     appSearchViewModel: AppSearchViewModel = hiltViewModel(),
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    onSettingsClicked: () -> Unit
 ) {
     val context = LocalContext.current
     val appSearchUiState by appSearchViewModel.uiState.collectAsStateWithLifecycle()
@@ -75,7 +76,8 @@ fun MainScreenContent(
                     onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
                     enableUserScroll = { userScrollEnabled = true },
                     disableUserScroll = { userScrollEnabled = false },
-                    onBackPressed = homeScreenViewModel::onBackPressed
+                    onBackPressed = homeScreenViewModel::onBackPressed,
+                    onSettingsClicked = onSettingsClicked
                 )
                 Page.APP_SEARCH.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,

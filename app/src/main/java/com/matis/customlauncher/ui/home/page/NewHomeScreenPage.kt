@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun NewHomeScreenPage() {
-    // Will be userd later
     Box(modifier = Modifier.Companion.fillMaxSize()) {
         Box(
             modifier = Modifier.Companion
