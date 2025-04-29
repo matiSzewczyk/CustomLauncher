@@ -6,23 +6,22 @@ plugins {
 }
 
 android {
-    namespace = "com.matis.customlauncher.core.data"
-
+    namespace = "com.matis.customlauncher.core.datastore"
     compileSdk = 35
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
 dependencies {
-    implementation(project(":core:database"))
-    implementation(project(":core:datastore"))
-    implementation(project(":applications"))
+    implementation(project(":core:model"))
+
+    implementation(libs.androidx.datastore)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

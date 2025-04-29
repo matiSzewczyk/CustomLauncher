@@ -20,11 +20,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.ui.Page
+import com.matis.customlauncher.model.MainPage
 import com.matis.customlauncher.ui.appsearch.AppSearchContent
 import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
 import com.matis.customlauncher.ui.home.HomeContent
 import com.matis.customlauncher.ui.home.HomeScreenViewModel
+import com.matis.customlauncher.ui.main.data.model.colorForPage
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -40,7 +41,7 @@ fun MainScreenContent(
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { MainPage.entries.size })
     var userScrollEnabled by remember { mutableStateOf(true) }
 
     val clearFocusAndHideKeyboard: () -> Unit = {
@@ -55,21 +56,20 @@ fun MainScreenContent(
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val colors = Page.entries.map { it.color }
 
     if (pagerState.isScrollInProgress) clearFocusAndHideKeyboard()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors[pagerState.currentPage])
+            .background(colorForPage(pagerState.currentPage))
     ) {
         VerticalPager(
             state = pagerState,
             userScrollEnabled = userScrollEnabled
         ) {
             when (it) {
-                Page.HOME.pageNumber -> HomeContent(
+                MainPage.HOME.pageNumber -> HomeContent(
                     uiState = homeScreenUiState,
                     onApplicationClicked = onApplicationClicked,
                     onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
@@ -79,7 +79,7 @@ fun MainScreenContent(
                     onBackPressed = homeScreenViewModel::onBackPressed,
                     onSettingsClicked = onSettingsClicked
                 )
-                Page.APP_SEARCH.pageNumber -> AppSearchContent(
+                MainPage.APP_DRAWER.pageNumber -> AppSearchContent(
                     uiState = appSearchUiState,
                     onSearchQueryChanged = appSearchViewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
@@ -93,7 +93,7 @@ fun MainScreenContent(
     }
 }
 
-private fun Context.showToast(message: String) {
+fun Context.showToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT)
         .show()
 }

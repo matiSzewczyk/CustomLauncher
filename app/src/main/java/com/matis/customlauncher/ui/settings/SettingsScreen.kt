@@ -21,7 +21,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
 
 @Composable
 fun SettingsScreen(
@@ -39,10 +38,11 @@ fun SettingsScreen(
             onBackPressed()
         }
     }
-    if (uiState.layoutDialogType != LayoutDialogType.None) {
+    if (uiState.layoutDialogToDisplay != null) {
         LayoutDialog(
-            dialogType = uiState.layoutDialogType,
-            onDismissRequest = viewModel::onLayoutDialogDismissed
+            dialogType = uiState.layoutDialogToDisplay!!,
+            onDismissRequest = viewModel::onLayoutDialogDismissed,
+            onConfirmClicked = viewModel::onConfirmClicked
         )
     }
     SettingsContent(

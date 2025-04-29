@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -14,19 +13,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.matis.customlauncher.model.LayoutType
+import com.matis.customlauncher.model.PageLayoutChangeResultDto
+import com.matis.customlauncher.ui.main.showToast
 import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
+import kotlinx.coroutines.launch
 
 @Composable
 fun LayoutDialog(
     dialogType: LayoutDialogType,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onConfirmClicked: (PageLayoutChangeResultDto) -> Unit
 ) {
+    var checkedState by remember { mutableStateOf<LayoutType?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
@@ -36,10 +44,21 @@ fun LayoutDialog(
                 .padding(16.dp)
         ) {
             Column {
-                LayoutList(dialogType = dialogType)
+                LayoutList(
+                    dialogType = dialogType,
+                    checkedState = checkedState,
+                    onCheckedChange = { checkedState = it })
                 ButtonSection(
                     onCancelClicked = { onDismissRequest() },
-                    onConfirmClicked = { }
+                    onConfirmClicked = {
+                        if (checkedState == null) coroutineScope.launch { context.showToast("No layout selected") }
+                        else onConfirmClicked(
+                            PageLayoutChangeResultDto(
+                                page = dialogType.page,
+                                layoutType = checkedState!!
+                            )
+                        )
+                    }
                 )
             }
         }
@@ -47,14 +66,16 @@ fun LayoutDialog(
 }
 
 @Composable
-fun LayoutList(dialogType: LayoutDialogType) {
-    var checkedState by remember { mutableStateOf<LayoutType?>(null) }
-
+fun LayoutList(
+    dialogType: LayoutDialogType,
+    checkedState: LayoutType?,
+    onCheckedChange: (LayoutType) -> Unit
+) {
     dialogType.supportedLayouts.forEach {
         LayoutItem(
             layoutType = it,
             checked = it == checkedState,
-            onCheckedChange = { checkedState = it }
+            onCheckedChange = { onCheckedChange(it) }
         )
     }
 }
@@ -87,8 +108,10 @@ fun ButtonSection(
     onCancelClicked: () -> Unit,
     onConfirmClicked: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
         TextButton(onClick = { onCancelClicked() }) {
             Text(text = "Cancel")
         }
