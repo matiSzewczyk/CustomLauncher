@@ -24,14 +24,22 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     val uiState get() = _uiState.asStateFlow()
 
     fun onHomeScreenLayoutClicked() {
-        _uiState.update { it.copy(layoutDialogType = LayoutDialogType.NONE) }
+        _uiState.update { it.copy(layoutDialogType = LayoutDialogType.HomeScreen) }
+    }
+
+    fun onAppDrawerLayoutClicked() {
+        _uiState.update { it.copy(layoutDialogType = LayoutDialogType.AppDrawer) }
     }
 
     fun onBackPressed(): Job = viewModelScope.launch {
-        if (uiState.value.layoutDialogType != LayoutDialogType.NONE) {
-            _uiState.update { it.copy(layoutDialogType = LayoutDialogType.NONE) }
+        if (uiState.value.layoutDialogType != LayoutDialogType.None) {
+            _uiState.update { it.copy(layoutDialogType = LayoutDialogType.None) }
         } else {
             _event.emit(Any())
         }
+    }
+
+    fun onLayoutDialogDismissed() {
+        _uiState.update { it.copy(layoutDialogType = LayoutDialogType.None) }
     }
 }
