@@ -14,14 +14,14 @@ fun MainScreen(
     appState: AppState,
     onSettingsClicked: () -> Unit
 ) {
-    val hasDefaultLauncherPermission by appState.hasDefaultLauncherPermission.collectAsStateWithLifecycle()
+    val hasDefaultLauncherPermission by appState.isSetAsDefaultHomeApplication.collectAsStateWithLifecycle()
     val context = LocalContext.current
     BackHandler {
         if (hasDefaultLauncherPermission) Unit
         else (context as? MainActivity)?.onBackPressedDispatcher?.onBackPressed()
     }
-    if (!hasDefaultLauncherPermission) NotDefaultLauncherContent(
-        onGrantPermissionClick = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
+    if (!hasDefaultLauncherPermission) NotDefaultHomeAppContent(
+        onSetDefaultHomeApplicationClicked = { context.startActivity(Intent(Settings.ACTION_HOME_SETTINGS)) }
     )
     else MainScreenContent(onSettingsClicked = onSettingsClicked)
 }

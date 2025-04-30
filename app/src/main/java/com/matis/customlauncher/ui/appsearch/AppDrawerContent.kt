@@ -3,7 +3,6 @@ package com.matis.customlauncher.ui.appsearch
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,10 +10,8 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,7 +42,7 @@ import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 @Composable
-fun AppSearchContent(
+fun AppDrawerContent(
     onSearchQueryChanged: (String) -> Unit,
     uiState: UiState,
     onBackPressed: () -> Unit,

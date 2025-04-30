@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NotDefaultLauncherContent(
-    onGrantPermissionClick: () -> Unit = {}
+fun NotDefaultHomeAppContent(
+    onSetDefaultHomeApplicationClicked: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
@@ -33,12 +33,12 @@ fun NotDefaultLauncherContent(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Default launcher permission not granted. It is required for this application")
+                Text(text = "I'm not the default Home Application. Let's change that 😉")
                 Button(
-                    onClick = { onGrantPermissionClick() },
+                    onClick = { onSetDefaultHomeApplicationClicked() },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text("Grant permission")
+                    Text("Set as default Home Application")
                 }
             }
         }

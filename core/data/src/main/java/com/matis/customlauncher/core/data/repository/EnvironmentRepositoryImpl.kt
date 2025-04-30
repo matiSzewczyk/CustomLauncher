@@ -11,7 +11,7 @@ internal class EnvironmentRepositoryImpl @Inject constructor(
 
     private val isDefaultHomeApp = MutableStateFlow(false)
 
-    override fun isDefaultHomeApp(): StateFlow<Boolean> =
+    override fun isDefaultHomeApplication(): StateFlow<Boolean> =
         isDefaultHomeApp
 
     override fun updateDefaultHomeApplicationStatus() {

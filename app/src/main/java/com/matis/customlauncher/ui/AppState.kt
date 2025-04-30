@@ -19,6 +19,6 @@ class AppState(
     repository: EnvironmentRepository
 ) {
 
-    val hasDefaultLauncherPermission: StateFlow<Boolean> =
-        repository.isDefaultHomeApp()
+    val isSetAsDefaultHomeApplication: StateFlow<Boolean> =
+        repository.isDefaultHomeApplication()
 }

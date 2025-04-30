@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class AppSearchViewModel @Inject constructor(
+class AppDrawerViewModel @Inject constructor(
     private val addApplicationToHomeScreen: AddApplicationToHomeScreen,
     private val getApplicationsMatchingQuery: GetApplicationsMatchingQuery,
     private val getHomeScreenApplications: GetHomeScreenApplications,

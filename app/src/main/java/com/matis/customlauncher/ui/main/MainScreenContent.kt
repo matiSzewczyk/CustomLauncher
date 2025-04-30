@@ -22,8 +22,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matis.customlauncher.model.MainPage
-import com.matis.customlauncher.ui.appsearch.AppSearchContent
-import com.matis.customlauncher.ui.appsearch.AppSearchViewModel
+import com.matis.customlauncher.ui.appsearch.AppDrawerContent
+import com.matis.customlauncher.ui.appsearch.AppDrawerViewModel
 import com.matis.customlauncher.ui.home.HomeContent
 import com.matis.customlauncher.ui.home.HomeScreenViewModel
 import com.matis.customlauncher.ui.main.data.model.colorForPage
@@ -32,12 +32,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainScreenContent(
-    appSearchViewModel: AppSearchViewModel = hiltViewModel(),
+    appDrawerViewModel: AppDrawerViewModel = hiltViewModel(),
     homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     onSettingsClicked: () -> Unit
 ) {
     val context = LocalContext.current
-    val appSearchUiState by appSearchViewModel.uiState.collectAsStateWithLifecycle()
+    val appSearchUiState by appDrawerViewModel.uiState.collectAsStateWithLifecycle()
     val homeScreenUiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     val softwareKeyboardController = LocalSoftwareKeyboardController.current
@@ -84,14 +84,14 @@ fun MainScreenContent(
                     onBackPressed = homeScreenViewModel::onBackPressed,
                     onSettingsClicked = onSettingsClicked
                 )
-                MainPage.APP_DRAWER.pageNumber -> AppSearchContent(
+                MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
                     uiState = appSearchUiState,
-                    onSearchQueryChanged = appSearchViewModel::onSearchQueryChanged,
+                    onSearchQueryChanged = appDrawerViewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
                     clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
                     onApplicationClicked = onApplicationClicked,
-                    onAddToHomeScreenClicked = appSearchViewModel::onAddToHomeScreenClicked,
-                    onRemoveFromHomeScreenClicked = appSearchViewModel::onRemoveFromHomeScreenClicked,
+                    onAddToHomeScreenClicked = appDrawerViewModel::onAddToHomeScreenClicked,
+                    onRemoveFromHomeScreenClicked = appDrawerViewModel::onRemoveFromHomeScreenClicked,
                 )
             }
         }
