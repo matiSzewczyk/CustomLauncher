@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -80,10 +81,10 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getHomeScreen(
+    private suspend fun getHomeScreen(
         homeScreenApplications: List<ApplicationItem>,
         layoutType: LayoutType
-    ): HomeScreenViewDto {
+    ): HomeScreenViewDto = withContext(Dispatchers.Main) {
         val positionMap = homeScreenApplications.associateBy { it.position }
         val highestPosition = positionMap.keys.maxOrNull() ?: 0
         val applicationPageCount = highestPosition.div(layoutType.appCap) + 1
@@ -96,7 +97,7 @@ class HomeScreenViewModel @Inject constructor(
             }
             Applications(applications = applications)
         }
-        return HomeScreenViewDto(layoutType = layoutType, pages = applicationPages)
+        HomeScreenViewDto(layoutType = layoutType, pages = applicationPages)
     }
 
     private fun HomeScreenViewDto.addNewEmptyPage(): HomeScreenViewDto {
@@ -109,7 +110,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun HomeScreenViewDto.removeNewEmptyPage(): HomeScreenViewDto {
         val homeScreensWithoutNewEmptyPage = buildList {
-            addAll(pages.dropLast(pages.lastIndex))
+            addAll(pages.dropLast(1))
         }
         return copy(pages = homeScreensWithoutNewEmptyPage)
     }
