@@ -2,26 +2,37 @@ package com.matis.customlauncher.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.matis.customlauncher.core.data.repository.SettingsRepository
 import com.matis.customlauncher.domain.home.GetHomeScreenApplications
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
+import com.matis.customlauncher.model.Applications
+import com.matis.customlauncher.model.Empty
 import com.matis.customlauncher.model.HomeScreenApplicationDto
-import com.matis.customlauncher.model.HomeScreenApplicationViewItem
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.EmptyItem
+import com.matis.customlauncher.model.LayoutType
+import com.matis.customlauncher.model.MainPage
 import com.matis.customlauncher.model.toView
+import com.matis.customlauncher.ui.home.data.HomeScreenViewDto
 import com.matis.customlauncher.ui.home.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
+    settingsRepository: SettingsRepository,
     private val getHomeScreenApplications: GetHomeScreenApplications,
     private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen
 ) : ViewModel() {
@@ -34,8 +45,15 @@ class HomeScreenViewModel @Inject constructor(
             getHomeScreenApplications()
                 .distinctUntilChanged()
                 .map { it.map(HomeScreenApplicationDto::toView) }
-                .map { getGridItems(it) }
-                .collect { gridItems -> _uiState.update { it.copy(applications = gridItems) } }
+                .flatMapLatest { applications ->
+                    combine(
+                        flowOf(applications),
+                        settingsRepository.getLayoutForPage(MainPage.HOME)
+                    ) { applications, layoutType ->
+                        getHomeScreen(applications, layoutType)
+                    }
+                }
+                .collect { homeScreen -> _uiState.update { it.copy(homeScreen = homeScreen) } }
         }
     }
 
@@ -44,22 +62,57 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onHomeScreenLongPressed() {
-        _uiState.update { it.copy(isInEditMode = true) }
-    }
-
-    fun onBackPressed() {
-        _uiState.update { it.copy(isInEditMode = false) }
-    }
-
-    private fun getGridItems(homeScreenApplications: List<ApplicationItem>): List<HomeScreenApplicationViewItem> {
-        val positionMap = homeScreenApplications.associateBy { it.position }
-        return List(GRID_SIZE) { position ->
-            positionMap[position] ?: EmptyItem(position)
+        _uiState.update {
+            it.copy(
+                isInEditMode = true,
+                homeScreen = uiState.value.homeScreen.addNewEmptyPage()
+            )
         }
     }
 
-    companion object {
-        // TODO: Temporary, use customizable, user picked values
-        private const val GRID_SIZE = 12
+    fun onBackPressed() {
+        if (!uiState.value.isInEditMode) return
+        _uiState.update {
+            it.copy(
+                isInEditMode = false,
+                homeScreen = uiState.value.homeScreen.removeNewEmptyPage()
+            )
+        }
+    }
+
+    private fun getHomeScreen(
+        homeScreenApplications: List<ApplicationItem>,
+        layoutType: LayoutType
+    ): HomeScreenViewDto {
+        val positionMap = homeScreenApplications.associateBy { it.position }
+        val highestPosition = positionMap.keys.maxOrNull() ?: 0
+        val applicationPageCount = highestPosition.div(layoutType.appCap) + 1
+
+        val applicationPages = (0 until applicationPageCount).map { pageIndex ->
+            val start = pageIndex * layoutType.appCap
+            val end = start + layoutType.appCap
+            val applications = (start until end).map { position ->
+                positionMap[position] ?: EmptyItem(position)
+            }
+            Applications(applications = applications)
+        }
+        return HomeScreenViewDto(layoutType = layoutType, pages = applicationPages)
+    }
+
+    private fun HomeScreenViewDto.addNewEmptyPage(): HomeScreenViewDto {
+        val homeScreensWithNewEmptyPage = buildList {
+            addAll(pages)
+            add(Empty)
+        }
+        return copy(pages = homeScreensWithNewEmptyPage)
+    }
+
+    private fun HomeScreenViewDto.removeNewEmptyPage(): HomeScreenViewDto {
+        val homeScreensWithoutNewEmptyPage = buildList {
+            addAll(pages.dropLast(pages.lastIndex))
+        }
+        return copy(pages = homeScreensWithoutNewEmptyPage)
     }
 }
+
+

@@ -25,5 +25,5 @@ object DatastoreModule {
             context.dataStoreFile(DATA_STORE_NAME)
         }
 
-    private const val DATA_STORE_NAME = "settings"
+    private const val DATA_STORE_NAME = "settings.preferences_pb"
 }

@@ -30,22 +30,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.matis.customlauncher.model.Applications
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
-// TODO: Only temporary
-const val COLUMNS = 3
-
 @Composable
-fun DefaultHomeScreenPage(
+fun ApplicationsHomeScreenPage(
     uiState: UiState,
+    page: Int,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit
+    onMainScreenLongPressed: () -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(COLUMNS),
+        columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
         userScrollEnabled = false,
         verticalArrangement = Arrangement.SpaceAround,
         horizontalArrangement = Arrangement.SpaceAround,
@@ -61,7 +60,9 @@ fun DefaultHomeScreenPage(
                 )
             }
     ) {
-        itemsIndexed(uiState.applications) { index, app ->
+        itemsIndexed(
+            items = (uiState.homeScreen.pages[page] as Applications).applications
+        ) { index, app ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +128,8 @@ private fun TransparentApplication(
         }
         Text(
             text = application.label,
-            color = Color.White
+            color = Color.White,
+            maxLines = 2
         )
     }
 }

@@ -25,8 +25,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.matis.customlauncher.R
+import com.matis.customlauncher.model.Applications
 import com.matis.customlauncher.ui.home.data.model.UiState
-import com.matis.customlauncher.ui.home.page.DefaultHomeScreenPage
+import com.matis.customlauncher.ui.home.page.ApplicationsHomeScreenPage
 import com.matis.customlauncher.ui.home.page.NewHomeScreenPage
 
 @Composable
@@ -74,22 +75,24 @@ fun HomeScreenPagerSection(
         targetValue = if (uiState.isInEditMode) 64.dp else 0.dp
     )
 
-    val state = rememberPagerState(pageCount = { 2 })
+    val state = rememberPagerState(pageCount = { uiState.homeScreen.pages.size })
+
     HorizontalPager(
         state = state,
         pageSpacing = 32.dp,
         contentPadding = PaddingValues(all = animatedPadding),
-        userScrollEnabled = uiState.isInEditMode,
         modifier = modifier.fillMaxSize()
     ) { page ->
-        // TODO: Temporary as visualisation
-        if (page == 0) DefaultHomeScreenPage(
-            uiState = uiState,
-            onApplicationClicked = onApplicationClicked,
-            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-            onMainScreenLongPressed = onMainScreenLongPressed
-        )
-        else NewHomeScreenPage()
+        when {
+            uiState.homeScreen.pages[page] is Applications -> ApplicationsHomeScreenPage(
+                uiState = uiState,
+                page = page,
+                onApplicationClicked = onApplicationClicked,
+                onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+                onMainScreenLongPressed = onMainScreenLongPressed
+            )
+            uiState.isInEditMode -> NewHomeScreenPage()
+        }
     }
 }
 
