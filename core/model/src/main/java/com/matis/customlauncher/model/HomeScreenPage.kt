@@ -4,4 +4,4 @@ sealed interface HomeScreenPage
 
 data class Applications(val applications: List<HomeScreenApplicationViewItem>) : HomeScreenPage
 
-data object Empty : HomeScreenPage
+data object AddNewApplication : HomeScreenPage

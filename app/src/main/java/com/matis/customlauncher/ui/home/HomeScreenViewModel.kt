@@ -6,7 +6,7 @@ import com.matis.customlauncher.core.data.repository.SettingsRepository
 import com.matis.customlauncher.domain.home.GetHomeScreenApplications
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
 import com.matis.customlauncher.model.Applications
-import com.matis.customlauncher.model.Empty
+import com.matis.customlauncher.model.AddNewApplication
 import com.matis.customlauncher.model.HomeScreenApplicationDto
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.EmptyItem
@@ -17,6 +17,7 @@ import com.matis.customlauncher.ui.home.data.HomeScreenViewDto
 import com.matis.customlauncher.ui.home.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.math.ceil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,7 +88,7 @@ class HomeScreenViewModel @Inject constructor(
     ): HomeScreenViewDto = withContext(Dispatchers.Main) {
         val positionMap = homeScreenApplications.associateBy { it.position }
         val highestPosition = positionMap.keys.maxOrNull() ?: 0
-        val applicationPageCount = highestPosition.div(layoutType.appCap) + 1
+        val applicationPageCount = ceil(highestPosition.toFloat() / layoutType.appCap).toInt()
 
         val applicationPages = (0 until applicationPageCount).map { pageIndex ->
             val start = pageIndex * layoutType.appCap
@@ -103,15 +104,13 @@ class HomeScreenViewModel @Inject constructor(
     private fun HomeScreenViewDto.addNewEmptyPage(): HomeScreenViewDto {
         val homeScreensWithNewEmptyPage = buildList {
             addAll(pages)
-            add(Empty)
+            add(AddNewApplication)
         }
         return copy(pages = homeScreensWithNewEmptyPage)
     }
 
     private fun HomeScreenViewDto.removeNewEmptyPage(): HomeScreenViewDto {
-        val homeScreensWithoutNewEmptyPage = buildList {
-            addAll(pages.dropLast(1))
-        }
+        val homeScreensWithoutNewEmptyPage = pages.filter { it !is AddNewApplication }
         return copy(pages = homeScreensWithoutNewEmptyPage)
     }
 }
