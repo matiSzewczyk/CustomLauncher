@@ -41,7 +41,7 @@ fun RoundedTextField(
             )
             .border(
                 width = 2.dp,
-                brush = SolidColor(MaterialTheme.colorScheme.primary),
+                brush = SolidColor(MaterialTheme.colorScheme.secondary),
                 shape = RoundedCornerShape(32.dp)
             )
     ) {
@@ -49,7 +49,7 @@ fun RoundedTextField(
             modifier = Modifier.padding(12.dp),
             imageVector = Icons.Rounded.Search,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = MaterialTheme.colorScheme.secondary
         )
         Box {
             BasicTextField(
@@ -58,7 +58,7 @@ fun RoundedTextField(
                     onValueChange(it)
                     shouldDisplayIcon = it.isNotEmpty()
                 },
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.secondary),
                 modifier = modifier
             )
         }

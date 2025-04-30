@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -62,7 +63,7 @@ class AppDrawerViewModel @Inject constructor(
         viewModelScope.launch {
             uiState
                 .map { it.query }
-                .debounce(timeoutMillis = 300)
+                .debounce(timeoutMillis = 200)
                 .distinctUntilChanged()
                 .flatMapLatest { query ->
                     combine(
@@ -75,7 +76,10 @@ class AppDrawerViewModel @Inject constructor(
                         applications.map { app -> app.toView(isHomeScreenApp(app)) }
                     }
                 }
-                .collect { filteredApps -> uiState.update { it.copy(applications = filteredApps) } }
+                .flowOn(Dispatchers.Default)
+                .collect { filteredApps ->
+                    uiState.update { it.copy(applications = filteredApps) }
+                }
         }
     }
 }

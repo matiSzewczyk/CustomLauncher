@@ -85,7 +85,7 @@ class HomeScreenViewModel @Inject constructor(
     private suspend fun getHomeScreen(
         homeScreenApplications: List<ApplicationItem>,
         layoutType: LayoutType
-    ): HomeScreenViewDto = withContext(Dispatchers.Main) {
+    ): HomeScreenViewDto = withContext(Dispatchers.Default) {
         val positionMap = homeScreenApplications.associateBy { it.position }
         val highestPosition = positionMap.keys.maxOrNull() ?: 0
         val applicationPageCount = ceil(highestPosition.toFloat() / layoutType.appCap).toInt()
