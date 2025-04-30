@@ -2,6 +2,7 @@ package com.matis.customlauncher.ui.main
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,10 +60,14 @@ fun MainScreenContent(
 
     if (pagerState.isScrollInProgress) clearFocusAndHideKeyboard()
 
+    val backgroundColor by animateColorAsState(
+        targetValue = colorForPage(pagerState.currentPage)
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorForPage(pagerState.currentPage))
+            .background(backgroundColor)
     ) {
         VerticalPager(
             state = pagerState,
