@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -54,6 +55,7 @@ fun ApplicationsHomeScreenPage(
                 color = if (uiState.isInEditMode) Color.Black.copy(alpha = .4f) else Color.Transparent,
                 shape = MaterialTheme.shapes.extraLarge
             )
+            .padding(horizontal = 8.dp)
             .pointerInput(null) {
                 detectTapGestures(
                     onLongPress = { onMainScreenLongPressed() }
@@ -129,7 +131,8 @@ private fun TransparentApplication(
         Text(
             text = application.label,
             color = Color.White,
-            maxLines = 2
+            maxLines = 2,
+            textAlign = TextAlign.Center
         )
     }
 }
