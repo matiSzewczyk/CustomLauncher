@@ -1,5 +1,9 @@
 package com.matis.customlauncher.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -16,7 +20,10 @@ fun NavController.navigateToSettings() {
 fun NavGraphBuilder.settingsNavigation(
     onBackPressed: () -> Unit
 ) {
-    composable<SettingsScreen> {
+    composable<SettingsScreen>(
+        enterTransition = { scaleIn(initialScale = 0f) + fadeIn() },
+        exitTransition = { scaleOut() + fadeOut() }
+    ) {
         SettingsScreen(onBackPressed = onBackPressed)
     }
 }
