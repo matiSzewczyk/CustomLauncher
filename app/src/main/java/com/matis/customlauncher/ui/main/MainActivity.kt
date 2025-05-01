@@ -5,10 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.matis.customlauncher.core.data.repository.EnvironmentRepository
 import com.matis.customlauncher.navigation.MainNavHost
 import com.matis.customlauncher.ui.rememberAppState
@@ -35,12 +31,7 @@ class MainActivity : ComponentActivity() {
             val appState = rememberAppState(repository = repository)
 
             CustomLauncherTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    containerColor = Color.Transparent.copy(alpha = .15f)
-                ) {
-                    MainNavHost(appState = appState)
-                }
+                MainNavHost(appState = appState)
             }
         }
     }
