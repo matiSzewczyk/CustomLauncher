@@ -50,7 +50,7 @@ fun HomeContent(
     }
 
     Column(
-        modifier = Modifier.safeContentPadding()
+        modifier = Modifier.padding(vertical = 24.dp)
     ) {
         HomeScreenPagerSection(
             uiState = uiState,
@@ -75,14 +75,14 @@ fun HomeScreenPagerSection(
     modifier: Modifier = Modifier
 ) {
     val animatedPadding by animateDpAsState(
-        targetValue = if (uiState.isInEditMode) 64.dp else 0.dp
+        targetValue = if (uiState.isInEditMode) 32.dp else 0.dp
     )
 
     val state = rememberPagerState(pageCount = { uiState.homeScreen.pages.size })
 
     HorizontalPager(
         state = state,
-        pageSpacing = 32.dp,
+        pageSpacing = 16.dp,
         contentPadding = PaddingValues(all = animatedPadding),
         modifier = modifier.fillMaxSize()
     ) { page ->

@@ -51,17 +51,34 @@ fun AppDrawerContent(
     onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
     onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit
 ) {
+    BackHandler {
+        onBackPressed()
+    }
+    ApplicationList(
+        onSearchQueryChanged = onSearchQueryChanged,
+        uiState = uiState,
+        clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
+        onApplicationClicked = onApplicationClicked,
+        onAddToHomeScreenClicked = onAddToHomeScreenClicked,
+        onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+    )
+}
+
+@Composable
+private fun ApplicationList(
+    onSearchQueryChanged: (String) -> Unit,
+    uiState: UiState,
+    clearFocusAndHideKeyboard: () -> Unit,
+    onApplicationClicked: (String) -> Unit,
+    onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
+    onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
+) {
     val focusRequester = remember { FocusRequester() }
     val isSearchFocused = remember { mutableStateOf(false) }
 
     LaunchedEffect(null) {
         focusRequester.requestFocus()
     }
-
-    BackHandler {
-        onBackPressed()
-    }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -95,7 +112,11 @@ fun AppDrawerContent(
             )
         }
         item {
-            Spacer(Modifier.height(WindowInsets.safeContent.asPaddingValues().calculateTopPadding()))
+            Spacer(
+                Modifier.height(
+                    WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
+                )
+            )
         }
     }
 }

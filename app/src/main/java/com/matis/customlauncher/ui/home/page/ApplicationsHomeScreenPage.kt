@@ -5,7 +5,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +17,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,10 +30,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.matis.customlauncher.model.Applications
 import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
+import com.matis.customlauncher.model.LayoutType
 import com.matis.customlauncher.ui.home.data.model.UiState
+import com.matis.customlauncher.ui.shared.ApplicationTile
+import com.matis.customlauncher.ui.shared.LocalApplicationTile
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 @Composable
@@ -44,41 +48,53 @@ fun ApplicationsHomeScreenPage(
     onRemoveFromHomeScreenClicked: (String) -> Unit,
     onMainScreenLongPressed: () -> Unit,
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
-        userScrollEnabled = false,
-        verticalArrangement = Arrangement.SpaceAround,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                color = if (uiState.isInEditMode) Color.Black.copy(alpha = .4f) else Color.Transparent,
-                shape = MaterialTheme.shapes.extraLarge
-            )
-            .padding(horizontal = 8.dp)
-            .pointerInput(null) {
-                detectTapGestures(
-                    onLongPress = { onMainScreenLongPressed() }
+    val applicationTile = when (uiState.homeScreen.layoutType) {
+        LayoutType.GRID_4X4 -> ApplicationTile(
+            fontSize = 12.sp,
+            iconSize = 28.dp
+        )
+        else -> ApplicationTile(
+            fontSize = 14.sp,
+            iconSize = 42.dp
+        )
+    }
+
+    // Provide the applicationTile to the composables
+    CompositionLocalProvider(LocalApplicationTile provides applicationTile) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
+            userScrollEnabled = false,
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalArrangement = Arrangement.SpaceAround,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = if (uiState.isInEditMode) Color.Black.copy(alpha = .4f) else Color.Transparent,
+                    shape = MaterialTheme.shapes.extraLarge
                 )
-            }
-    ) {
-        itemsIndexed(
-            items = (uiState.homeScreen.pages[page] as Applications).applications
-        ) { index, app ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                if (app is ApplicationItem) {
-                    TransparentApplication(
-                        application = app,
-                        onApplicationClicked = onApplicationClicked,
-                        onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
+                .padding(horizontal = 8.dp)
+                .pointerInput(null) {
+                    detectTapGestures(
+                        onLongPress = { onMainScreenLongPressed() }
                     )
-                } else {
-                    EmptyApplication()
+                }
+        ) {
+            itemsIndexed(
+                items = (uiState.homeScreen.pages[page] as Applications).applications
+            ) { index, app ->
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (app is ApplicationItem) {
+                        TransparentApplication(
+                            application = app,
+                            onApplicationClicked = onApplicationClicked,
+                            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
+                        )
+                    } else {
+                        EmptyApplication()
+                    }
                 }
             }
         }
@@ -98,7 +114,7 @@ private fun TransparentApplication(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f)
+            .padding(horizontal = 12.dp)
             .pointerInput(true) {
                 detectTapGestures(
                     onTap = { onApplicationClicked(application.packageName) },
@@ -116,7 +132,7 @@ private fun TransparentApplication(
             contentDescription = null,
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .size(32.dp)
+                .size(LocalApplicationTile.current.iconSize)
         )
         DropdownMenu(
             expanded = menuExpanded,
@@ -132,18 +148,14 @@ private fun TransparentApplication(
             text = application.label,
             color = Color.White,
             maxLines = 2,
-            textAlign = TextAlign.Center
+            fontSize = LocalApplicationTile.current.fontSize,
+            textAlign = TextAlign.Center,
         )
     }
 }
 
 @Composable
 fun EmptyApplication() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-    ) {
-    }
+
 }
 
