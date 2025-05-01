@@ -40,7 +40,7 @@ fun SettingsScreen(
     }
     if (uiState.layoutDialogToDisplay != null) {
         LayoutDialog(
-            dialogType = uiState.layoutDialogToDisplay!!,
+            uiState = uiState,
             onDismissRequest = viewModel::onLayoutDialogDismissed,
             onConfirmClicked = viewModel::onConfirmClicked
         )

@@ -21,18 +21,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.matis.customlauncher.model.LayoutType
-import com.matis.customlauncher.model.PageLayoutChangeResultDto
+import com.matis.customlauncher.model.PageLayoutDto
 import com.matis.customlauncher.ui.main.showToast
 import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
+import com.matis.customlauncher.ui.settings.data.model.UiState
 import kotlinx.coroutines.launch
 
 @Composable
 fun LayoutDialog(
-    dialogType: LayoutDialogType,
+    uiState: UiState,
     onDismissRequest: () -> Unit,
-    onConfirmClicked: (PageLayoutChangeResultDto) -> Unit
+    onConfirmClicked: (PageLayoutDto) -> Unit
 ) {
-    var checkedState by remember { mutableStateOf<LayoutType?>(null) }
+    var checkedState by remember {
+        mutableStateOf(uiState.layoutDialogToDisplay?.getLayoutType(uiState))
+    }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     Dialog(
@@ -45,7 +48,7 @@ fun LayoutDialog(
         ) {
             Column {
                 LayoutList(
-                    dialogType = dialogType,
+                    dialogType = uiState.layoutDialogToDisplay!!,
                     checkedState = checkedState,
                     onCheckedChange = { checkedState = it })
                 ButtonSection(
@@ -53,8 +56,8 @@ fun LayoutDialog(
                     onConfirmClicked = {
                         if (checkedState == null) coroutineScope.launch { context.showToast("No layout selected") }
                         else onConfirmClicked(
-                            PageLayoutChangeResultDto(
-                                page = dialogType.page,
+                            PageLayoutDto(
+                                page = uiState.layoutDialogToDisplay.page,
                                 layoutType = checkedState!!
                             )
                         )
@@ -119,5 +122,10 @@ fun ButtonSection(
             Text(text = "Confirm")
         }
     }
+}
+
+private fun LayoutDialogType.getLayoutType(uiState: UiState): LayoutType = when (this) {
+    LayoutDialogType.Home -> uiState.appliedLayoutTypeForHome.layoutType
+    LayoutDialogType.AppDrawer -> uiState.appliedLayoutTypeForAppDrawer.layoutType
 }
 
