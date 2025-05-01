@@ -1,12 +1,14 @@
 package com.matis.customlauncher.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,16 +43,14 @@ fun LayoutDialog(
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+        Card {
             Column {
+                TitleSection()
                 LayoutList(
                     dialogType = uiState.layoutDialogToDisplay!!,
                     checkedState = checkedState,
-                    onCheckedChange = { checkedState = it })
+                    onCheckedChange = { checkedState = it }
+                )
                 ButtonSection(
                     onCancelClicked = { onDismissRequest() },
                     onConfirmClicked = {
@@ -65,6 +65,21 @@ fun LayoutDialog(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun TitleSection() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Select your preferred layout",
+            style = MaterialTheme.typography.titleLarge
+        )
     }
 }
 
@@ -92,7 +107,7 @@ fun LayoutItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
@@ -124,8 +139,9 @@ fun ButtonSection(
     }
 }
 
-private fun LayoutDialogType.getLayoutType(uiState: UiState): LayoutType = when (this) {
-    LayoutDialogType.Home -> uiState.appliedLayoutTypeForHome.layoutType
-    LayoutDialogType.AppDrawer -> uiState.appliedLayoutTypeForAppDrawer.layoutType
-}
+private fun LayoutDialogType.getLayoutType(uiState: UiState): LayoutType =
+    when (this) {
+        LayoutDialogType.Home -> uiState.appliedLayoutTypeForHome.layoutType
+        LayoutDialogType.AppDrawer -> uiState.appliedLayoutTypeForAppDrawer.layoutType
+    }
 

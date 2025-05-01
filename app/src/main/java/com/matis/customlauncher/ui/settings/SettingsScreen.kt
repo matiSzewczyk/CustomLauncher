@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.matis.customlauncher.model.LayoutType
+import com.matis.customlauncher.ui.settings.data.model.UiState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -58,6 +60,7 @@ fun SettingsScreen(
         topBar = { SettingsTopBar() }
     ) {
         SettingsContent(
+            uiState = uiState,
             onHomeScreenLayoutClicked = viewModel::onHomeScreenLayoutClicked,
             onAppDrawerLayoutClicked = viewModel::onAppDrawerLayoutClicked,
             modifier = Modifier
@@ -71,6 +74,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsContent(
+    uiState: UiState,
     modifier: Modifier = Modifier,
     onHomeScreenLayoutClicked: () -> Unit,
     onAppDrawerLayoutClicked: () -> Unit,
@@ -80,11 +84,13 @@ private fun SettingsContent(
             Column {
                 SettingsItem(
                     text = "Home screen layout",
+                    appliedLayoutType = uiState.appliedLayoutTypeForHome.layoutType,
                     onClick = onHomeScreenLayoutClicked
                 )
                 HorizontalDivider()
                 SettingsItem(
                     text = "App drawer layout",
+                    appliedLayoutType = uiState.appliedLayoutTypeForAppDrawer.layoutType,
                     onClick = onAppDrawerLayoutClicked
                 )
             }
@@ -95,6 +101,7 @@ private fun SettingsContent(
 @Composable
 fun SettingsItem(
     text: String,
+    appliedLayoutType: LayoutType,
     onClick: () -> Unit
 ) {
     Row(
@@ -107,8 +114,13 @@ fun SettingsItem(
                 indication = ripple()
             )
             .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = text)
+        Text(
+            text = appliedLayoutType.rawName,
+            color = MaterialTheme.colorScheme.primary
+        )
     }
 }
