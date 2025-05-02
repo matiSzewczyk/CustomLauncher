@@ -32,9 +32,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.model.Applications
-import com.matis.customlauncher.model.HomeScreenApplicationViewItem.ApplicationItem
-import com.matis.customlauncher.model.LayoutType
+import com.matis.customlauncher.model.domain.HomePageLayoutType
+import com.matis.customlauncher.model.view.HomeScreenItemDto.Application
+import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.shared.ApplicationTile
 import com.matis.customlauncher.ui.shared.LocalApplicationTile
@@ -49,7 +49,7 @@ fun ApplicationsHomeScreenPage(
     onMainScreenLongPressed: () -> Unit,
 ) {
     val applicationTile = when (uiState.homeScreen.layoutType) {
-        LayoutType.GRID_4X4 -> ApplicationTile(
+        HomePageLayoutType.GRID_4X4 -> ApplicationTile(
             fontSize = 12.sp,
             iconSize = 28.dp
         )
@@ -80,18 +80,19 @@ fun ApplicationsHomeScreenPage(
                 }
         ) {
             itemsIndexed(
-                items = (uiState.homeScreen.pages[page] as Applications).applications
+                items = (uiState.homeScreen.pages[page] as Applications).items
             ) { index, app ->
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (app is ApplicationItem) {
+                    if (app is Application) {
                         TransparentApplication(
                             application = app,
                             onApplicationClicked = onApplicationClicked,
                             onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
                         )
+                        // TODO: account for folder when adding support
                     } else {
                         EmptyApplication()
                     }
@@ -103,7 +104,7 @@ fun ApplicationsHomeScreenPage(
 
 @Composable
 private fun TransparentApplication(
-    application: ApplicationItem,
+    application: Application,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit
 ) {

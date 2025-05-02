@@ -1,7 +1,7 @@
 package com.matis.customlauncher.domain.appsearch
 
 import com.matis.customlauncher.domain.fakes.TestInstalledApplicationsRepository
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import kotlinx.coroutines.flow.first

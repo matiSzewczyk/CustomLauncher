@@ -6,10 +6,10 @@ import com.matis.customlauncher.domain.appsearch.AddApplicationToHomeScreen
 import com.matis.customlauncher.domain.appsearch.GetApplicationsMatchingQuery
 import com.matis.customlauncher.domain.home.GetHomeScreenApplications
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
-import com.matis.customlauncher.model.ApplicationInfoDto
-import com.matis.customlauncher.model.ApplicationInfoViewDto
-import com.matis.customlauncher.model.toDomain
-import com.matis.customlauncher.model.toView
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
+import com.matis.customlauncher.model.view.ApplicationInfoViewDto
+import com.matis.customlauncher.model.view.toDomain
+import com.matis.customlauncher.model.view.toView
 import com.matis.customlauncher.ui.appsearch.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

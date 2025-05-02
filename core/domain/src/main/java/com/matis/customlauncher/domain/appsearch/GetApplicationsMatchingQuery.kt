@@ -1,7 +1,7 @@
 package com.matis.customlauncher.domain.appsearch
 
 import com.matis.customlauncher.core.data.repository.InstalledApplicationsRepository
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

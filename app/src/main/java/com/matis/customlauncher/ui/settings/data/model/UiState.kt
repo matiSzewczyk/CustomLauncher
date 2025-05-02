@@ -1,8 +1,8 @@
 package com.matis.customlauncher.ui.settings.data.model
 
-import com.matis.customlauncher.model.MainPage.APP_DRAWER
-import com.matis.customlauncher.model.MainPage.HOME
-import com.matis.customlauncher.model.PageLayoutDto
+import com.matis.customlauncher.model.domain.MainPage.APP_DRAWER
+import com.matis.customlauncher.model.domain.MainPage.HOME
+import com.matis.customlauncher.model.domain.PageLayoutDto
 
 data class UiState(
     val appliedLayoutTypeForHome: PageLayoutDto = PageLayoutDto(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -26,7 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.matis.customlauncher.R
-import com.matis.customlauncher.model.Applications
+import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.page.ApplicationsHomeScreenPage
 import com.matis.customlauncher.ui.home.page.NewHomeScreenPage
@@ -40,7 +39,8 @@ fun HomeContent(
     enableUserScroll: () -> Unit,
     disableUserScroll: () -> Unit,
     onBackPressed: () -> Unit,
-    onSettingsClicked: () -> Unit
+    onSettingsClicked: () -> Unit,
+    onNewPageClicked: () -> Unit
 ) {
     // Disable scroll for vertical pager
     if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
@@ -57,6 +57,7 @@ fun HomeContent(
             onApplicationClicked = onApplicationClicked,
             onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
             onMainScreenLongPressed = onMainScreenLongPressed,
+            onNewPageClicked = onNewPageClicked,
             modifier = Modifier.weight(1f)
         )
         BottomInteractionSection(
@@ -72,6 +73,7 @@ fun HomeScreenPagerSection(
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
     onMainScreenLongPressed: () -> Unit,
+    onNewPageClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val animatedPadding by animateDpAsState(
@@ -94,7 +96,9 @@ fun HomeScreenPagerSection(
                 onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
                 onMainScreenLongPressed = onMainScreenLongPressed
             )
-            uiState.isInEditMode -> NewHomeScreenPage()
+            uiState.isInEditMode -> NewHomeScreenPage(
+                onNewPageClicked = onNewPageClicked
+            )
         }
     }
 }

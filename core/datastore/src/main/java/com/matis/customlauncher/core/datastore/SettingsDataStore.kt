@@ -4,9 +4,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.matis.customlauncher.model.LayoutType
-import com.matis.customlauncher.model.MainPage
-import com.matis.customlauncher.model.PageLayoutDto
+import com.matis.customlauncher.model.domain.HomePageLayoutType
+import com.matis.customlauncher.model.domain.MainPage
+import com.matis.customlauncher.model.domain.PageLayoutDto
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,10 +21,10 @@ class SettingsDataStore @Inject constructor(
         }
     }
 
-    fun getLayoutForPage(page: MainPage): Flow<LayoutType> =
+    fun getLayoutForPage(page: MainPage): Flow<HomePageLayoutType> =
         datastore.data.map {
             it[stringPreferencesKey(page.name)]
-                ?.let { LayoutType.valueOf(it) }
+                ?.let { HomePageLayoutType.valueOf(it) }
                 ?: page.defaultLayout
         }
 }

@@ -1,7 +1,7 @@
 package com.matis.customlauncher.ui.main.data.model
 
 import androidx.compose.ui.graphics.Color
-import com.matis.customlauncher.model.MainPage
+import com.matis.customlauncher.model.domain.MainPage
 
 data class MainPageConfig(
     val type: MainPage,

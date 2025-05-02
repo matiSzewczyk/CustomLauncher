@@ -25,5 +25,6 @@ class DatabaseModule {
                 klass = LauncherRoomDatabase::class.java,
                 name = "launcher_database"
             )
+            .fallbackToDestructiveMigration(true)
             .build()
 }

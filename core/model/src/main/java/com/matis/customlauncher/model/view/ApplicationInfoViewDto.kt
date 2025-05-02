@@ -1,4 +1,6 @@
-package com.matis.customlauncher.model
+package com.matis.customlauncher.model.view
+
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 
 data class ApplicationInfoViewDto(
     val packageName: String,

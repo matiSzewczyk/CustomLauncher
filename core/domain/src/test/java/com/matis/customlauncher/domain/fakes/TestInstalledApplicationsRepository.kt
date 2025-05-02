@@ -1,7 +1,7 @@
 package com.matis.customlauncher.domain.fakes
 
 import com.matis.customlauncher.core.data.repository.InstalledApplicationsRepository
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class TestInstalledApplicationsRepository : InstalledApplicationsRepository {

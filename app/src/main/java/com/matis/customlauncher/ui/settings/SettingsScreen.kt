@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.model.LayoutType
+import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.ui.settings.data.model.UiState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -101,7 +101,7 @@ private fun SettingsContent(
 @Composable
 fun SettingsItem(
     text: String,
-    appliedLayoutType: LayoutType,
+    appliedLayoutType: HomePageLayoutType,
     onClick: () -> Unit
 ) {
     Row(

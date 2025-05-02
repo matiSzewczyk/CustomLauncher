@@ -1,7 +1,7 @@
 package com.matis.customlauncher.core.data.repository
 
 import com.matis.customlauncher.applications.ApplicationsApi
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

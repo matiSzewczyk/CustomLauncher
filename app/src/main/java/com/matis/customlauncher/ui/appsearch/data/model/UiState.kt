@@ -1,6 +1,6 @@
 package com.matis.customlauncher.ui.appsearch.data.model
 
-import com.matis.customlauncher.model.ApplicationInfoViewDto
+import com.matis.customlauncher.model.view.ApplicationInfoViewDto
 
 data class UiState(
     val query: String = "",

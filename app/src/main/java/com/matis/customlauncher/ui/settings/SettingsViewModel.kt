@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.core.data.repository.SettingsRepository
 import com.matis.customlauncher.domain.settings.SaveNewLayoutConfig
-import com.matis.customlauncher.model.MainPage
-import com.matis.customlauncher.model.PageLayoutDto
+import com.matis.customlauncher.model.domain.MainPage
+import com.matis.customlauncher.model.domain.PageLayoutDto
 import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
 import com.matis.customlauncher.ui.settings.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel

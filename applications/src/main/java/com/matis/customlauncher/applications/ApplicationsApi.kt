@@ -1,6 +1,6 @@
 package com.matis.customlauncher.applications
 
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 
 interface ApplicationsApi {
     fun isDefaultHomeApplication(): Boolean

@@ -1,4 +1,4 @@
-package com.matis.customlauncher.model
+package com.matis.customlauncher.model.domain
 
 data class HomeScreenApplicationDto(
     val packageName: String,

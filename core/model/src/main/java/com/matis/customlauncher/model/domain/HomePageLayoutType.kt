@@ -1,6 +1,6 @@
-package com.matis.customlauncher.model
+package com.matis.customlauncher.model.domain
 
-enum class LayoutType(
+enum class HomePageLayoutType(
     val rawName: String,
     val appCap: Int,
     val columns: Int

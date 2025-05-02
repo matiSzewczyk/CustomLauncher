@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.model.MainPage
+import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.ui.appsearch.AppDrawerContent
 import com.matis.customlauncher.ui.appsearch.AppDrawerViewModel
 import com.matis.customlauncher.ui.home.HomeContent
@@ -82,7 +82,8 @@ fun MainScreenContent(
                     enableUserScroll = { userScrollEnabled = true },
                     disableUserScroll = { userScrollEnabled = false },
                     onBackPressed = homeScreenViewModel::onBackPressed,
-                    onSettingsClicked = onSettingsClicked
+                    onSettingsClicked = onSettingsClicked,
+                    onNewPageClicked = homeScreenViewModel::onNewPageClicked
                 )
                 MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
                     uiState = appSearchUiState,

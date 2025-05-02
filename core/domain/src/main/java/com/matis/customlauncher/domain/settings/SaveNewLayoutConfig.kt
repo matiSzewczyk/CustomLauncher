@@ -1,7 +1,7 @@
 package com.matis.customlauncher.domain.settings
 
 import com.matis.customlauncher.core.data.repository.SettingsRepository
-import com.matis.customlauncher.model.PageLayoutDto
+import com.matis.customlauncher.model.domain.PageLayoutDto
 import javax.inject.Inject
 
 class SaveNewLayoutConfig @Inject constructor(

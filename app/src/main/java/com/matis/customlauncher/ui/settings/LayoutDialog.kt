@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.matis.customlauncher.model.LayoutType
-import com.matis.customlauncher.model.PageLayoutDto
+import com.matis.customlauncher.model.domain.HomePageLayoutType
+import com.matis.customlauncher.model.domain.PageLayoutDto
 import com.matis.customlauncher.ui.main.showToast
 import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
 import com.matis.customlauncher.ui.settings.data.model.UiState
@@ -86,8 +86,8 @@ private fun TitleSection() {
 @Composable
 fun LayoutList(
     dialogType: LayoutDialogType,
-    checkedState: LayoutType?,
-    onCheckedChange: (LayoutType) -> Unit
+    checkedState: HomePageLayoutType?,
+    onCheckedChange: (HomePageLayoutType) -> Unit
 ) {
     dialogType.supportedLayouts.forEach {
         LayoutItem(
@@ -100,7 +100,7 @@ fun LayoutList(
 
 @Composable
 fun LayoutItem(
-    layoutType: LayoutType,
+    layoutType: HomePageLayoutType,
     checked: Boolean,
     onCheckedChange: () -> Unit
 ) {
@@ -139,7 +139,7 @@ fun ButtonSection(
     }
 }
 
-private fun LayoutDialogType.getLayoutType(uiState: UiState): LayoutType =
+private fun LayoutDialogType.getLayoutType(uiState: UiState): HomePageLayoutType =
     when (this) {
         LayoutDialogType.Home -> uiState.appliedLayoutTypeForHome.layoutType
         LayoutDialogType.AppDrawer -> uiState.appliedLayoutTypeForAppDrawer.layoutType

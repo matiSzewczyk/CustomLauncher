@@ -6,7 +6,7 @@ import android.content.Intent.ACTION_MAIN
 import android.content.Intent.CATEGORY_LAUNCHER
 import android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
 import android.content.pm.ResolveInfo
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

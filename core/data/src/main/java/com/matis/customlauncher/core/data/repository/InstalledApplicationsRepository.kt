@@ -1,6 +1,6 @@
 package com.matis.customlauncher.core.data.repository
 
-import com.matis.customlauncher.model.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.ApplicationInfoDto
 import kotlinx.coroutines.flow.MutableStateFlow
 
 interface InstalledApplicationsRepository {
