@@ -4,6 +4,7 @@ import com.matis.core.customlauncher.database.dao.HomeScreenApplicationDao
 import com.matis.core.customlauncher.database.model.toDomain
 import com.matis.customlauncher.core.datastore.SettingsDataStore
 import com.matis.customlauncher.model.domain.ApplicationInfoDto
+import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.domain.HomeScreenApplicationDto
 import com.matis.customlauncher.model.domain.HomeScreenDto
 import com.matis.customlauncher.model.domain.MainPage
@@ -22,6 +23,13 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
         val layout = dataStore.getLayoutForPage(MainPage.HOME).first()
         dao.insertHomeScreenApplication(application, layout)
     }
+
+    override suspend fun reconfigureHomeScreenLayout(newLayout: HomePageLayoutType) {
+        dao.migrateHomeScreenItemsForNewLayout(newLayout)
+    }
+
+    override suspend fun fetchHomeScreenLayout(): HomePageLayoutType =
+        dataStore.getLayoutForPage(MainPage.HOME).first()
 
     override fun fetchHomeScreens(): Flow<HomeScreenDto> =
         combine(

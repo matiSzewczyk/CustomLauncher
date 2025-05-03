@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.first
 @Dao
 abstract class HomeScreenApplicationDao {
     @Insert(onConflict = REPLACE)
-    abstract fun insertNewHomeScreenPage(data: HomeScreenPageEntity)
+    abstract fun insertHomeScreenPage(data: HomeScreenPageEntity)
 
     @Insert(onConflict = REPLACE)
     abstract fun insertHomeScreenApplication(data: HomeScreenApplicationEntity)
@@ -46,6 +46,15 @@ abstract class HomeScreenApplicationDao {
     )
     abstract fun fetchFirstAvailablePosition(): Int
 
+    @Query("DELETE FROM home_screen_page")
+    abstract fun removeAllPages()
+
+    @Query("DELETE FROM home_screen_folder")
+    abstract fun removeAllFolders()
+
+    @Query("DELETE FROM home_screen_application")
+    abstract fun removeAllApplications()
+
     @Transaction
     open suspend fun insertHomeScreenApplication(
         application: ApplicationInfoDto,
@@ -73,19 +82,64 @@ abstract class HomeScreenApplicationDao {
                     position = firstAvailablePosition
                 )
                 insertHomeScreenApplication(newApplication)
+                return
             }
-        } ?: run {
-            val newApplication = HomeScreenApplicationEntity(
-                packageName = application.packageName,
-                label = application.label,
-                homeScreenPageIndex = 0,
-                folderPosition = null,
-                folderHomeScreenPageIndex = null,
-                position = 0
-            )
+        }
 
-            insertNewHomeScreenPage(HomeScreenPageEntity(pageIndex = 0))
-            insertHomeScreenApplication(newApplication)
+        // Create a new page if all existing pages are full
+        val newPageIndex = homeScreens?.size ?: 0
+        val newApplication = HomeScreenApplicationEntity(
+            packageName = application.packageName,
+            label = application.label,
+            homeScreenPageIndex = newPageIndex,
+            folderPosition = null,
+            folderHomeScreenPageIndex = null,
+            position = 0
+        )
+
+        insertHomeScreenPage(HomeScreenPageEntity(pageIndex = newPageIndex))
+        insertHomeScreenApplication(newApplication)
+    }
+
+    @Transaction
+    open suspend fun migrateHomeScreenItemsForNewLayout(newLayoutType: HomePageLayoutType) {
+        val homeScreens = fetchAllHomeScreens().first()
+        // todo: check if cascade delete is sufficient
+        removeAllPages()
+        removeAllFolders()
+        removeAllApplications()
+
+        var appsToInsertIntoNextPage = emptyList<HomeScreenApplicationEntity>()
+        var lastTakenIndex = -1
+
+        homeScreens.forEach { page ->
+            insertHomeScreenPage(page.homeScreenPage)
+            appsToInsertIntoNextPage.forEachIndexed { index, app ->
+                val updatedApp = app.copy(
+                    homeScreenPageIndex = page.homeScreenPage.pageIndex,
+                    position = index
+                )
+                insertHomeScreenApplication(updatedApp)
+                lastTakenIndex = index
+            }
+            appsToInsertIntoNextPage = emptyList()
+            val (appsToStayInPage, appsToMove) = page.applications.partition { it.position < newLayoutType.appCap }
+            //            val (foldersToStayInPage, foldersToMove) = page.folders.partition { it.folder.position < newLayoutType.appCap }
+            //            insertHomeScreenFolder()
+            appsToStayInPage.forEach { app ->
+                val index = lastTakenIndex + 1
+                insertHomeScreenApplication(app.copy(position = index))
+                lastTakenIndex = index
+            }
+            lastTakenIndex = -1
+            appsToInsertIntoNextPage = appsToMove
+        }
+        if (appsToInsertIntoNextPage.isNotEmpty()) {
+            appsToInsertIntoNextPage.forEach {
+                val index = lastTakenIndex + 1
+                insertHomeScreenApplication(it.copy(position = index))
+                lastTakenIndex = index
+            }
         }
     }
 }
