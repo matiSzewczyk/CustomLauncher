@@ -142,4 +142,10 @@ abstract class HomeScreenApplicationDao {
             }
         }
     }
+    @Transaction
+    open suspend fun insertNewHomeScreenPage() {
+        val homeScreens = fetchAllHomeScreens().first()
+        val newPageIndex = homeScreens.size
+        insertHomeScreenPage(HomeScreenPageEntity(pageIndex = newPageIndex))
+    }
 }

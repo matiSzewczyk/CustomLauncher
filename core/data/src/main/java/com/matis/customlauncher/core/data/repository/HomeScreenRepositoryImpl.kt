@@ -31,6 +31,10 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
     override suspend fun fetchHomeScreenLayout(): HomePageLayoutType =
         dataStore.getLayoutForPage(MainPage.HOME).first()
 
+    override suspend fun insertNewApplicationsPage() {
+        dao.insertNewHomeScreenPage()
+    }
+
     override fun fetchHomeScreens(): Flow<HomeScreenDto> =
         combine(
             dao.fetchAllHomeScreens(),

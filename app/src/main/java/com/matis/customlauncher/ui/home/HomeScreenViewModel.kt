@@ -3,12 +3,14 @@ package com.matis.customlauncher.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.core.data.repository.SettingsRepository
+import com.matis.customlauncher.domain.home.AddNewApplicationsPage
 import com.matis.customlauncher.domain.home.GetHomeScreens
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.model.view.HomeScreenItemDto
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto
+import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
 import com.matis.customlauncher.ui.home.data.HomeScreenViewDto
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.data.toView
@@ -31,7 +33,8 @@ import kotlinx.coroutines.launch
 class HomeScreenViewModel @Inject constructor(
     settingsRepository: SettingsRepository,
     private val getHomeScreens: GetHomeScreens,
-    private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen
+    private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen,
+    private val addNewApplicationsPage: AddNewApplicationsPage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -78,11 +81,18 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onNewPageClicked() {
-        _uiState.update {
-            it.copy(
-                isInEditMode = false,
-                homeScreen = uiState.value.homeScreen.removeAddNewPage()
-            )
+        viewModelScope.launch {
+            launch(Dispatchers.Main) {
+
+                _uiState.update {
+                    it.copy(
+                        isInEditMode = false,
+                        homeScreen = uiState.value.homeScreen.removeAddNewPage()
+                            .addNewApplicationsPage()
+                    )
+                }
+            }
+            launch(Dispatchers.Default) { addNewApplicationsPage() }
         }
     }
 
@@ -91,7 +101,7 @@ class HomeScreenViewModel @Inject constructor(
         layoutType: HomePageLayoutType
     ): HomeScreenViewDto =
         homeScreen.pages.map { page ->
-            val applicationsPage = page as HomeScreenPageViewDto.Applications
+            val applicationsPage = page as Applications
             val takenPages = applicationsPage.items.map { it.position }
 
             (0 until layoutType.appCap)
@@ -114,15 +124,14 @@ class HomeScreenViewModel @Inject constructor(
         val homeScreensWithoutNewEmptyPage = pages.filter { it !is HomeScreenPageViewDto.AddNew }
         return copy(pages = homeScreensWithoutNewEmptyPage)
     }
-    // TODO:  implement later
-    //
-    //    private fun HomeScreenViewDto.addNewApplicationsPages(): HomeScreenViewDto {
-    //        val homeScreensWithNewApplicationsPages = buildList {
-    //            addAll(pages)
-    //            add(Applications(applications = emptyList()))
-    //        }
-    //        return copy(pages = homeScreensWithNewApplicationsPages)
-    //    }
+
+    private fun HomeScreenViewDto.addNewApplicationsPage(): HomeScreenViewDto {
+        val homeScreensWithNewApplicationsPages = buildList {
+            addAll(pages)
+            add(Applications(pages.size, emptyList()))
+        }
+        return copy(pages = homeScreensWithNewApplicationsPages)
+    }
 }
 
 
