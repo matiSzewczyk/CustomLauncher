@@ -89,7 +89,6 @@ fun MainScreenContent(
                     uiState = appSearchUiState,
                     onSearchQueryChanged = appDrawerViewModel::onSearchQueryChanged,
                     onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                    clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
                     onApplicationClicked = onApplicationClicked,
                     onAddToHomeScreenClicked = appDrawerViewModel::onAddToHomeScreenClicked,
                     onRemoveFromHomeScreenClicked = appDrawerViewModel::onRemoveFromHomeScreenClicked,

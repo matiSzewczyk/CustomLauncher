@@ -20,16 +20,12 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +42,6 @@ fun AppDrawerContent(
     onSearchQueryChanged: (String) -> Unit,
     uiState: UiState,
     onBackPressed: () -> Unit,
-    clearFocusAndHideKeyboard: () -> Unit,
     onApplicationClicked: (String) -> Unit,
     onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
     onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit
@@ -57,7 +52,6 @@ fun AppDrawerContent(
     ApplicationList(
         onSearchQueryChanged = onSearchQueryChanged,
         uiState = uiState,
-        clearFocusAndHideKeyboard = clearFocusAndHideKeyboard,
         onApplicationClicked = onApplicationClicked,
         onAddToHomeScreenClicked = onAddToHomeScreenClicked,
         onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
@@ -68,26 +62,14 @@ fun AppDrawerContent(
 private fun ApplicationList(
     onSearchQueryChanged: (String) -> Unit,
     uiState: UiState,
-    clearFocusAndHideKeyboard: () -> Unit,
     onApplicationClicked: (String) -> Unit,
     onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
     onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
-    val isSearchFocused = remember { mutableStateOf(false) }
-
-    LaunchedEffect(null) {
-        focusRequester.requestFocus()
-    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .pointerInput(null) {
-                detectTapGestures(
-                    onTap = { clearFocusAndHideKeyboard() }
-                )
-            },
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
@@ -97,10 +79,7 @@ private fun ApplicationList(
             RoundedTextField(
                 text = uiState.query,
                 onValueChange = { onSearchQueryChanged(it) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester)
-                    .onFocusChanged { isSearchFocused.value = it.isFocused }
+                modifier = Modifier.fillMaxWidth()
             )
         }
         items(uiState.applications) { application ->
