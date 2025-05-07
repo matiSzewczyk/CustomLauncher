@@ -23,7 +23,7 @@ fun NewHomeScreenPage(
     onNewPageClicked: () -> Unit
 ) {
     Box(
-        modifier = Modifier.Companion
+        modifier = Modifier
             .fillMaxSize()
             .clickable(
                 onClick = { onNewPageClicked() },
@@ -35,7 +35,7 @@ fun NewHomeScreenPage(
             modifier = Modifier.Companion
                 .fillMaxSize()
                 .background(
-                    color = Color.Companion.Black.copy(alpha = .4f),
+                    color = Color.Companion.Black.copy(alpha = .6f),
                     shape = MaterialTheme.shapes.extraLarge
                 ),
             contentAlignment = Alignment.Companion.Center

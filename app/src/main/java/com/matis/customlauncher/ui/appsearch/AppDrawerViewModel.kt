@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -35,15 +36,15 @@ class AppDrawerViewModel @Inject constructor(
     private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen
 ) : ViewModel() {
 
-    var uiState = MutableStateFlow(UiState())
-        private set
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState get() = _uiState.asStateFlow()
 
     init {
         initializeSearchQueryListener()
     }
 
     fun onSearchQueryChanged(query: String) {
-        uiState.update { it.copy(query = query) }
+        _uiState.update { it.copy(query = query) }
     }
 
     fun onAddToHomeScreenClicked(application: ApplicationInfoViewDto) {
@@ -54,14 +55,10 @@ class AppDrawerViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) { removeApplicationFromHomeScreen(application.packageName) }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun initializeSearchQueryListener() {
         viewModelScope.launch {
-            uiState
+            _uiState
                 .map { it.query }
                 .debounce(timeoutMillis = 200)
                 .distinctUntilChanged()
@@ -78,7 +75,7 @@ class AppDrawerViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.Default)
                 .collect { filteredApps ->
-                    uiState.update { it.copy(applications = filteredApps) }
+                    _uiState.update { it.copy(applications = filteredApps) }
                 }
         }
     }

@@ -68,7 +68,7 @@ fun ApplicationsHomeScreenPage(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    color = if (uiState.isInEditMode) Color.Black.copy(alpha = .4f) else Color.Transparent,
+                    color = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent,
                     shape = MaterialTheme.shapes.extraLarge
                 )
                 .padding(horizontal = 8.dp)

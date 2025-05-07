@@ -15,7 +15,7 @@ val mainPageConfigs = listOf(
     ),
     MainPageConfig(
         type = MainPage.APP_DRAWER,
-        color = Color.Black.copy(alpha = .8f)
+        color = Color.Black.copy(alpha = .6f)
     )
 )
 

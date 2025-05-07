@@ -161,12 +161,12 @@ private fun TransparentApplication(
             offset = pressOffset.copy(y = pressOffset.y - 82.dp),
         ) {
             if (application.isHomeScreenApplication) RemoveFromHomeScreenMenuItem {
-                onRemoveFromHomeScreenClicked(application)
                 menuExpanded = false
+                onRemoveFromHomeScreenClicked(application)
             }
             else AddToHomeScreenMenuItem {
-                onAddToHomeScreenClicked(application)
                 menuExpanded = false
+                onAddToHomeScreenClicked(application)
             }
         }
         Text(
