@@ -59,7 +59,6 @@ fun ApplicationsHomeScreenPage(
         )
     }
 
-    // Provide the applicationTile to the composables
     CompositionLocalProvider(LocalApplicationTile provides applicationTile) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
