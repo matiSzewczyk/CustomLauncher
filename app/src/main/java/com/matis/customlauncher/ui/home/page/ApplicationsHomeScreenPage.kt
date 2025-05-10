@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.view.HomeScreenItemDto.Application
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
@@ -46,7 +47,7 @@ fun ApplicationsHomeScreenPage(
     page: Int,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit,
+    onMainScreenLongPressed: () -> Unit
 ) {
     val applicationTile = when (uiState.homeScreen.layoutType) {
         HomePageLayoutType.GRID_4X4 -> ApplicationTile(
@@ -89,7 +90,8 @@ fun ApplicationsHomeScreenPage(
                         TransparentApplication(
                             application = app,
                             onApplicationClicked = onApplicationClicked,
-                            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked
+                            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+                            config = uiState.homeScreen.applicationIconConfig
                         )
                         // TODO: account for folder when adding support
                     } else {
@@ -105,7 +107,8 @@ fun ApplicationsHomeScreenPage(
 private fun TransparentApplication(
     application: Application,
     onApplicationClicked: (String) -> Unit,
-    onRemoveFromHomeScreenClicked: (String) -> Unit
+    onRemoveFromHomeScreenClicked: (String) -> Unit,
+    config: ApplicationIconConfigDto
 ) {
     var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -144,13 +147,15 @@ private fun TransparentApplication(
                 onClick = { onRemoveFromHomeScreenClicked(application.packageName) }
             )
         }
-        Text(
-            text = application.label,
-            color = Color.White,
-            maxLines = 2,
-            fontSize = LocalApplicationTile.current.fontSize,
-            textAlign = TextAlign.Center,
-        )
+        if (config.showLabel) {
+            Text(
+                text = application.label,
+                color = Color.White,
+                maxLines = 2,
+                fontSize = LocalApplicationTile.current.fontSize,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 

@@ -37,13 +37,15 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 settingsRepository.getLayoutForPage(MainPage.HOME),
-                settingsRepository.getLayoutForPage(MainPage.APP_DRAWER)
-            ) { home, appDrawer ->
+                settingsRepository.getLayoutForPage(MainPage.APP_DRAWER),
+                settingsRepository.getApplicationIconConfig()
+            ) { home, appDrawer, config ->
                 val homeState = uiState.value.appliedLayoutTypeForHome
                 val appDrawerState = uiState.value.appliedLayoutTypeForAppDrawer
                 uiState.value.copy(
                     appliedLayoutTypeForHome = homeState.copy(layoutType = home),
-                    appliedLayoutTypeForAppDrawer = appDrawerState.copy(layoutType = appDrawer)
+                    appliedLayoutTypeForAppDrawer = appDrawerState.copy(layoutType = appDrawer),
+                    applicationIconConfig = config
                 )
             }.collect { state -> _uiState.update { state } }
         }

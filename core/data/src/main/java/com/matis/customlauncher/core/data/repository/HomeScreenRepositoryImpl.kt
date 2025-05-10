@@ -38,10 +38,12 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
     override fun fetchHomeScreens(): Flow<HomeScreenDto> =
         combine(
             dao.fetchAllHomeScreens(),
-            dataStore.getLayoutForPage(MainPage.HOME)
-        ) { screens, layoutType ->
+            dataStore.getLayoutForPage(MainPage.HOME),
+            dataStore.getApplicationIconConfig()
+        ) { screens, layoutType, applicationIconConfig ->
             HomeScreenDto(
                 layoutType = layoutType,
+                applicationIconConfig = applicationIconConfig,
                 pages = screens.map { it.toDomain() }
             )
         }
