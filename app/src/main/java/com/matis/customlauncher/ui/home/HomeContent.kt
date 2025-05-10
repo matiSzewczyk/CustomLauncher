@@ -2,30 +2,20 @@ package com.matis.customlauncher.ui.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -33,6 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.matis.customlauncher.R
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
+import com.matis.customlauncher.ui.component.HomeScreenPager
+import com.matis.customlauncher.ui.component.PagerIndicators
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.page.ApplicationsHomeScreenPage
 import com.matis.customlauncher.ui.home.page.NewHomeScreenPage
@@ -52,87 +44,36 @@ fun HomeContent(
     // Disable scroll for vertical pager
     if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
 
+    val pagerState = rememberPagerState(pageCount = { uiState.homeScreen.pages.size })
+
     BackHandler {
         onBackPressed()
     }
 
-    Column(
-        modifier = Modifier.padding(vertical = 24.dp)
-    ) {
-        HomeScreenPagerSection(
-            uiState = uiState,
-            onApplicationClicked = onApplicationClicked,
-            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-            onMainScreenLongPressed = onMainScreenLongPressed,
-            onNewPageClicked = onNewPageClicked,
+    Column(modifier = Modifier.padding(vertical = 24.dp)) {
+        HomeScreenPager(
+            pagerState = pagerState,
+            isInEditMode = uiState.isInEditMode,
             modifier = Modifier.weight(1f)
-        )
+        ) { page ->
+            when {
+                uiState.homeScreen.pages[page] is Applications -> ApplicationsHomeScreenPage(
+                    uiState = uiState,
+                    page = page,
+                    onApplicationClicked = onApplicationClicked,
+                    onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+                    onMainScreenLongPressed = onMainScreenLongPressed
+                )
+                uiState.isInEditMode -> NewHomeScreenPage(
+                    onNewPageClicked = onNewPageClicked
+                )
+            }
+        }
+        PagerIndicators(state = pagerState)
         BottomInteractionSection(
             isVisible = uiState.isInEditMode,
             onSettingsClicked = onSettingsClicked
         )
-    }
-}
-
-@Composable
-fun HomeScreenPagerSection(
-    uiState: UiState,
-    onApplicationClicked: (String) -> Unit,
-    onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit,
-    onNewPageClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val animatedPadding by animateDpAsState(
-        targetValue = if (uiState.isInEditMode) 32.dp else 0.dp
-    )
-
-    val state = rememberPagerState(pageCount = { uiState.homeScreen.pages.size })
-
-    HorizontalPager(
-        state = state,
-        pageSpacing = 16.dp,
-        contentPadding = PaddingValues(all = animatedPadding),
-        modifier = modifier.fillMaxSize()
-    ) { page ->
-        when {
-            uiState.homeScreen.pages[page] is Applications -> ApplicationsHomeScreenPage(
-                uiState = uiState,
-                page = page,
-                onApplicationClicked = onApplicationClicked,
-                onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-                onMainScreenLongPressed = onMainScreenLongPressed
-            )
-            uiState.isInEditMode -> NewHomeScreenPage(
-                onNewPageClicked = onNewPageClicked
-            )
-        }
-    }
-    PagerIndicators(state = state)
-}
-
-@Composable
-fun PagerIndicators(state: PagerState) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        repeat(state.pageCount) { iteration ->
-            val color =
-                if (state.currentPage == iteration) MaterialTheme.colorScheme.primary else Color.DarkGray
-            val size by animateDpAsState(
-                targetValue = if (state.currentPage == iteration) 12.dp else 8.dp,
-                label = "indicator size"
-            )
-            Box(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .clip(CircleShape)
-                    .background(color)
-                    .size(size)
-            )
-        }
     }
 }
 

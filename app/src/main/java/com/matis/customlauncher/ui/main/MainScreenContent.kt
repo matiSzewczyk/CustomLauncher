@@ -3,10 +3,7 @@ package com.matis.customlauncher.ui.main
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.ui.appsearch.AppDrawerContent
 import com.matis.customlauncher.ui.appsearch.AppDrawerViewModel
+import com.matis.customlauncher.ui.component.MainScreenPager
 import com.matis.customlauncher.ui.home.HomeContent
 import com.matis.customlauncher.ui.home.HomeScreenViewModel
 import com.matis.customlauncher.ui.main.data.model.colorForPage
@@ -64,36 +62,32 @@ fun MainScreenContent(
         targetValue = colorForPage(pagerState.currentPage)
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-    ) {
-        VerticalPager(
-            state = pagerState,
-            userScrollEnabled = userScrollEnabled
-        ) {
-            when (it) {
-                MainPage.HOME.pageNumber -> HomeContent(
-                    uiState = homeScreenUiState,
-                    onApplicationClicked = onApplicationClicked,
-                    onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
-                    onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
-                    enableUserScroll = { userScrollEnabled = true },
-                    disableUserScroll = { userScrollEnabled = false },
-                    onBackPressed = homeScreenViewModel::onBackPressed,
-                    onSettingsClicked = onSettingsClicked,
-                    onNewPageClicked = homeScreenViewModel::onNewPageClicked
-                )
-                MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
-                    uiState = appSearchUiState,
-                    onSearchQueryChanged = appDrawerViewModel::onSearchQueryChanged,
-                    onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
-                    onApplicationClicked = onApplicationClicked,
-                    onAddToHomeScreenClicked = appDrawerViewModel::onAddToHomeScreenClicked,
-                    onRemoveFromHomeScreenClicked = appDrawerViewModel::onRemoveFromHomeScreenClicked,
-                )
-            }
+    MainScreenPager(
+        userScrollEnabled = userScrollEnabled,
+        backgroundColor = backgroundColor,
+        modifier = Modifier.fillMaxSize(),
+        pagerState = pagerState
+    ) { page ->
+        when (page) {
+            MainPage.HOME.pageNumber -> HomeContent(
+                uiState = homeScreenUiState,
+                onApplicationClicked = onApplicationClicked,
+                onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
+                onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
+                enableUserScroll = { userScrollEnabled = true },
+                disableUserScroll = { userScrollEnabled = false },
+                onBackPressed = homeScreenViewModel::onBackPressed,
+                onSettingsClicked = onSettingsClicked,
+                onNewPageClicked = homeScreenViewModel::onNewPageClicked
+            )
+            MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
+                uiState = appSearchUiState,
+                onSearchQueryChanged = appDrawerViewModel::onSearchQueryChanged,
+                onBackPressed = { coroutineScope.launch { pagerState.animateScrollToPage(0) } },
+                onApplicationClicked = onApplicationClicked,
+                onAddToHomeScreenClicked = appDrawerViewModel::onAddToHomeScreenClicked,
+                onRemoveFromHomeScreenClicked = appDrawerViewModel::onRemoveFromHomeScreenClicked,
+            )
         }
     }
 }

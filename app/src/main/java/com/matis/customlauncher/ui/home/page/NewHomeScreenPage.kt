@@ -32,24 +32,24 @@ fun NewHomeScreenPage(
             )
     ) {
         Box(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    color = Color.Companion.Black.copy(alpha = .6f),
+                    color = Color.Black.copy(alpha = .6f),
                     shape = MaterialTheme.shapes.extraLarge
                 ),
-            contentAlignment = Alignment.Companion.Center
+            contentAlignment = Alignment.Center
         ) { }
         Box(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Companion.Transparent)
+                .background(Color.Transparent)
                 .padding(16.dp),
-            contentAlignment = Alignment.Companion.Center
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                tint = Color.Companion.White,
+                tint = Color.White,
                 contentDescription = null
             )
         }

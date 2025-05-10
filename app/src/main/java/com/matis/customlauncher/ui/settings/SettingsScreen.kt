@@ -1,18 +1,15 @@
 package com.matis.customlauncher.ui.settings
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,11 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
-import com.matis.customlauncher.model.domain.HomePageLayoutType
-import com.matis.customlauncher.ui.settings.data.model.UiState
+import com.matis.customlauncher.ui.component.SettingsCard
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
@@ -66,65 +60,29 @@ fun SettingsScreen(
                 bottom = paddingValues.calculateBottomPadding()
             )
         ) {
-            LayoutSettingsContent(
-                uiState = uiState,
-                onHomeScreenLayoutClicked = viewModel::onHomeScreenLayoutClicked,
-                onAppDrawerLayoutClicked = viewModel::onAppDrawerLayoutClicked,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            ApplicationIconSettingsContent(
-                uiState = uiState,
-                onShowApplicationLabelChanged = viewModel::onShowApplicationLabelChanged,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun LayoutSettingsContent(
-    uiState: UiState,
-    onHomeScreenLayoutClicked: () -> Unit,
-    onAppDrawerLayoutClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier) {
-        Card {
-            Column {
+            SettingsCard {
                 SettingsItem(
                     text = "Home screen layout",
-                    appliedLayoutType = uiState.appliedLayoutTypeForHome.layoutType,
-                    onClick = onHomeScreenLayoutClicked
+                    appliedSetting = uiState.appliedLayoutTypeForHome.layoutType.rawName,
+                    onClick = viewModel::onHomeScreenLayoutClicked
                 )
                 HorizontalDivider()
                 SettingsItem(
                     text = "App drawer layout",
-                    appliedLayoutType = uiState.appliedLayoutTypeForAppDrawer.layoutType,
-                    onClick = onAppDrawerLayoutClicked
+                    appliedSetting = uiState.appliedLayoutTypeForAppDrawer.layoutType.rawName,
+                    onClick = viewModel::onAppDrawerLayoutClicked
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun ApplicationIconSettingsContent(
-    uiState: UiState,
-    onShowApplicationLabelChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(modifier = modifier) {
-        Card {
-            Column {
+            SettingsCard {
                 SettingsToggleItem(
                     text = "Show application label",
                     showApplicationLabel = uiState.applicationIconConfig.showLabel,
-                    onShowApplicationLabelChanged = onShowApplicationLabelChanged
+                    onShowApplicationLabelChanged = viewModel::onShowApplicationLabelChanged
                 )
                 HorizontalDivider()
                 SettingsItem(
                     text = "Icon Shape",
-                    appliedLayoutType = uiState.appliedLayoutTypeForAppDrawer.layoutType,
+                    appliedSetting = uiState.applicationIconConfig.iconShape,
                     onClick = {/* NOT YET IMPLEMENTED */ }
                 )
             }
@@ -135,7 +93,7 @@ private fun ApplicationIconSettingsContent(
 @Composable
 private fun SettingsItem(
     text: String,
-    appliedLayoutType: HomePageLayoutType,
+    appliedSetting: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -153,7 +111,7 @@ private fun SettingsItem(
     ) {
         Text(text = text)
         Text(
-            text = appliedLayoutType.rawName,
+            text = appliedSetting,
             color = MaterialTheme.colorScheme.primary
         )
     }
