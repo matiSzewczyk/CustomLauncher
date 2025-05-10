@@ -73,4 +73,10 @@ class SettingsViewModel @Inject constructor(
             saveNewLayoutConfig(result)
         }
     }
+
+    fun onShowApplicationLabelChanged(showLabel: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(showApplicationLabel = showLabel) }
+        }
+    }
 }

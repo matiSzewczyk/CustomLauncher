@@ -2,7 +2,6 @@ package com.matis.customlauncher.ui.settings
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +16,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -58,26 +58,34 @@ fun SettingsScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { SettingsTopBar() }
-    ) {
-        SettingsContent(
-            uiState = uiState,
-            onHomeScreenLayoutClicked = viewModel::onHomeScreenLayoutClicked,
-            onAppDrawerLayoutClicked = viewModel::onAppDrawerLayoutClicked,
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding(), bottom = it.calculateTopPadding())
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-        )
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
+            )
+        ) {
+            LayoutSettingsContent(
+                uiState = uiState,
+                onHomeScreenLayoutClicked = viewModel::onHomeScreenLayoutClicked,
+                onAppDrawerLayoutClicked = viewModel::onAppDrawerLayoutClicked,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            ApplicationIconSettingsContent(
+                uiState = uiState,
+                onShowApplicationLabelChanged = viewModel::onShowApplicationLabelChanged,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
     }
 }
 
 @Composable
-private fun SettingsContent(
+private fun LayoutSettingsContent(
     uiState: UiState,
-    modifier: Modifier = Modifier,
     onHomeScreenLayoutClicked: () -> Unit,
     onAppDrawerLayoutClicked: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         Card {
@@ -99,7 +107,32 @@ private fun SettingsContent(
 }
 
 @Composable
-fun SettingsItem(
+private fun ApplicationIconSettingsContent(
+    uiState: UiState,
+    onShowApplicationLabelChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        Card {
+            Column {
+                SettingsToggleItem(
+                    text = "Show application label",
+                    showApplicationLabel = uiState.showApplicationLabel,
+                    onShowApplicationLabelChanged = onShowApplicationLabelChanged
+                )
+                HorizontalDivider()
+                SettingsItem(
+                    text = "Icon Shape",
+                    appliedLayoutType = uiState.appliedLayoutTypeForAppDrawer.layoutType,
+                    onClick = {/* NOT YET IMPLEMENTED */ }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsItem(
     text: String,
     appliedLayoutType: HomePageLayoutType,
     onClick: () -> Unit
@@ -121,6 +154,28 @@ fun SettingsItem(
         Text(
             text = appliedLayoutType.rawName,
             color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun SettingsToggleItem(
+    text: String,
+    showApplicationLabel: Boolean,
+    onShowApplicationLabelChanged: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .height(84.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = text)
+        Switch(
+            checked = showApplicationLabel,
+            onCheckedChange = { onShowApplicationLabelChanged(!showApplicationLabel) }
         )
     }
 }

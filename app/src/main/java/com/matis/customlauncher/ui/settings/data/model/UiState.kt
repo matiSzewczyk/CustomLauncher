@@ -13,5 +13,6 @@ data class UiState(
         APP_DRAWER.defaultLayout,
         APP_DRAWER
     ),
-    val layoutDialogToDisplay: LayoutDialogType? = null
+    val layoutDialogToDisplay: LayoutDialogType? = null,
+    val showApplicationLabel: Boolean = true,
 )
