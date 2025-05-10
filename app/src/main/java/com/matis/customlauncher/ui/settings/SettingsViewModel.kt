@@ -3,6 +3,7 @@ package com.matis.customlauncher.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.matis.customlauncher.core.data.repository.SettingsRepository
+import com.matis.customlauncher.domain.settings.SaveNewApplicationIconConfig
 import com.matis.customlauncher.domain.settings.SaveNewLayoutConfig
 import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.model.domain.PageLayoutDto
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val saveNewLayoutConfig: SaveNewLayoutConfig,
+    private val saveNewApplicationIconConfig: SaveNewApplicationIconConfig,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
@@ -76,7 +78,9 @@ class SettingsViewModel @Inject constructor(
 
     fun onShowApplicationLabelChanged(showLabel: Boolean) {
         viewModelScope.launch {
-            _uiState.update { it.copy(showApplicationLabel = showLabel) }
+            val config = uiState.value.applicationIconConfig.copy(showLabel = showLabel)
+            _uiState.update { it.copy(applicationIconConfig = config) }
+            saveNewApplicationIconConfig(config)
         }
     }
 }

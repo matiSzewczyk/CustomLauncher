@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.ui.settings.data.model.UiState
 
@@ -117,7 +118,7 @@ private fun ApplicationIconSettingsContent(
             Column {
                 SettingsToggleItem(
                     text = "Show application label",
-                    showApplicationLabel = uiState.showApplicationLabel,
+                    showApplicationLabel = uiState.applicationIconConfig.showLabel,
                     onShowApplicationLabelChanged = onShowApplicationLabelChanged
                 )
                 HorizontalDivider()

@@ -1,5 +1,6 @@
 package com.matis.customlauncher.ui.settings.data.model
 
+import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
 import com.matis.customlauncher.model.domain.MainPage.APP_DRAWER
 import com.matis.customlauncher.model.domain.MainPage.HOME
 import com.matis.customlauncher.model.domain.PageLayoutDto
@@ -14,5 +15,5 @@ data class UiState(
         APP_DRAWER
     ),
     val layoutDialogToDisplay: LayoutDialogType? = null,
-    val showApplicationLabel: Boolean = true,
+    val applicationIconConfig: ApplicationIconConfigDto = ApplicationIconConfigDto.defaults
 )

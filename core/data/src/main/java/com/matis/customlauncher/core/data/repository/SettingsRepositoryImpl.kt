@@ -1,6 +1,7 @@
 package com.matis.customlauncher.core.data.repository
 
 import com.matis.customlauncher.core.datastore.SettingsDataStore
+import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.model.domain.PageLayoutDto
@@ -18,4 +19,11 @@ internal class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun getLayoutForPage(page: MainPage): Flow<HomePageLayoutType> =
         withContext(Dispatchers.IO) { settingsDataStore.getLayoutForPage(page) }
+
+    override suspend fun insertApplicationIconConfig(config: ApplicationIconConfigDto) {
+        withContext(Dispatchers.IO) { settingsDataStore.updateApplicationIconConfig(config) }
+    }
+
+    override suspend fun getApplicationIconConfig(): Flow<ApplicationIconConfigDto> =
+        withContext(Dispatchers.IO) { settingsDataStore.getApplicationIconConfig() }
 }
