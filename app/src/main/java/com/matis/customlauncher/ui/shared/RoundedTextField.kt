@@ -59,7 +59,8 @@ fun RoundedTextField(
                     shouldDisplayIcon = it.isNotEmpty()
                 },
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.secondary),
-                modifier = modifier
+                modifier = modifier,
+                textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary)
             )
         }
     }

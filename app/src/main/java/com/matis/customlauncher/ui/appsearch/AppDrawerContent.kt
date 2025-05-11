@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenu
@@ -73,7 +72,7 @@ private fun ApplicationList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Spacer(Modifier.height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
+            Spacer(Modifier.height(36.dp))
         }
         item {
             RoundedTextField(
