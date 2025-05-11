@@ -52,7 +52,7 @@ fun ApplicationsHomeScreenPage(
     val applicationTile = when (uiState.homeScreen.layoutType) {
         HomePageLayoutType.GRID_4X4 -> ApplicationTile(
             fontSize = 12.sp,
-            iconSize = 28.dp
+            iconSize = 36.dp
         )
         else -> ApplicationTile(
             fontSize = 14.sp,
