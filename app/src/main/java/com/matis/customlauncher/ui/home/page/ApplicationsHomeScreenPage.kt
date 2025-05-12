@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,11 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.matis.customlauncher.model.domain.ApplicationIconConfigDto
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.view.HomeScreenItemDto.Application
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
@@ -64,15 +65,15 @@ fun ApplicationsHomeScreenPage(
         LazyVerticalGrid(
             columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
             userScrollEnabled = false,
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalArrangement = Arrangement.SpaceAround,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxSize()
+                .padding(8.dp)
                 .background(
                     color = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent,
                     shape = MaterialTheme.shapes.extraLarge
                 )
-                .padding(horizontal = 8.dp)
                 .pointerInput(null) {
                     detectTapGestures(
                         onLongPress = { onMainScreenLongPressed() }
@@ -82,16 +83,13 @@ fun ApplicationsHomeScreenPage(
             itemsIndexed(
                 items = (uiState.homeScreen.pages[page] as Applications).items
             ) { index, app ->
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier.aspectRatio(1f)) {
                     if (app is Application) {
                         TransparentApplication(
                             application = app,
                             onApplicationClicked = onApplicationClicked,
                             onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-                            config = uiState.homeScreen.applicationIconConfig
+                            showLabel = uiState.homeScreen.applicationIconConfig.showLabel && !uiState.isInEditMode
                         )
                         // TODO: account for folder when adding support
                     } else {
@@ -108,7 +106,7 @@ private fun TransparentApplication(
     application: Application,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    config: ApplicationIconConfigDto
+    showLabel: Boolean
 ) {
     var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
@@ -117,7 +115,7 @@ private fun TransparentApplication(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 6.dp)
             .pointerInput(true) {
                 detectTapGestures(
                     onTap = { onApplicationClicked(application.packageName) },
@@ -147,20 +145,20 @@ private fun TransparentApplication(
                 onClick = { onRemoveFromHomeScreenClicked(application.packageName) }
             )
         }
-        if (config.showLabel) {
+        if (showLabel) {
             Text(
                 text = application.label,
                 color = Color.White,
-                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 fontSize = LocalApplicationTile.current.fontSize,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
     }
 }
 
 @Composable
-fun EmptyApplication() {
-
+fun EmptyApplication(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) { }
 }
-
