@@ -1,11 +1,13 @@
 package com.matis.customlauncher.model.view
 
+import androidx.compose.runtime.Stable
 import com.matis.customlauncher.model.domain.HomeScreenApplicationDto
 import com.matis.customlauncher.model.domain.HomeScreenFolderDto
 
 sealed class HomeScreenItemDto(
     open val position: Int
 ) {
+    @Stable
     data class Application(
         override val position: Int,
         val packageName: String,

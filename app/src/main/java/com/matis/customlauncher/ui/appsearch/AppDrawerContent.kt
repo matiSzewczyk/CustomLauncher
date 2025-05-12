@@ -81,7 +81,7 @@ private fun ApplicationList(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        items(uiState.applications) { application ->
+        items(items = uiState.applications) { application ->
             TransparentApplication(
                 application = application,
                 onApplicationClicked = { onApplicationClicked(application.packageName) },

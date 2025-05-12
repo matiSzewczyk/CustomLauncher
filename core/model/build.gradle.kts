@@ -16,3 +16,6 @@ android {
         jvmTarget = "17"
     }
 }
+dependencies {
+    implementation(libs.androidx.compose.runtime.android)
+}
