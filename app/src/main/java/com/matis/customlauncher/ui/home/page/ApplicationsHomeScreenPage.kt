@@ -1,5 +1,6 @@
 package com.matis.customlauncher.ui.home.page
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -68,12 +69,16 @@ fun ApplicationsHomeScreenPage(
         )
     }
 
+    val backgroundColor by animateColorAsState(
+        targetValue = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent
+    )
+
     CompositionLocalProvider(LocalApplicationTile provides applicationTile) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
                 .background(
-                    color = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent,
+                    color = backgroundColor,
                     shape = MaterialTheme.shapes.extraLarge
                 )
                 .pointerInput(null) {
