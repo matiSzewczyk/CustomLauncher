@@ -102,6 +102,15 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch { removeApplicationsPage(pageIndex) }
     }
 
+    fun onApplicationsPageClicked() {
+        _uiState.update {
+            it.copy(
+                isInEditMode = false,
+                homeScreen = uiState.value.homeScreen.removeAddNewPage()
+            )
+        }
+    }
+
     private fun fillEmptyPositionsWithEmptyItems(
         homeScreen: HomeScreenViewDto,
         layoutType: HomePageLayoutType

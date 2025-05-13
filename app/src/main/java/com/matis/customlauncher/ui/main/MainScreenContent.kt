@@ -79,7 +79,8 @@ fun MainScreenContent(
                 onBackPressed = homeScreenViewModel::onBackPressed,
                 onSettingsClicked = onSettingsClicked,
                 onNewPageClicked = homeScreenViewModel::onNewPageClicked,
-                onRemoveApplicationsPageClicked = homeScreenViewModel::onRemoveApplicationsPageClicked
+                onRemoveApplicationsPageClicked = homeScreenViewModel::onRemoveApplicationsPageClicked,
+                onApplicationsPageClicked = homeScreenViewModel::onApplicationsPageClicked
             )
             MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
                 uiState = appSearchUiState,

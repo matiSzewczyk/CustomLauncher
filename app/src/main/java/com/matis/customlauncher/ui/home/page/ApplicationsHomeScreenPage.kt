@@ -54,7 +54,8 @@ fun ApplicationsHomeScreenPage(
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
     onHomeScreenLongPressed: () -> Unit,
-    onRemoveApplicationsPageClicked: (Int) -> Unit
+    onRemoveApplicationsPageClicked: (Int) -> Unit,
+    onApplicationsPageClicked: () -> Unit
 ) {
     val applicationTile = when (uiState.homeScreen.layoutType) {
         HomePageLayoutType.GRID_4X4 -> ApplicationTile(
@@ -77,6 +78,7 @@ fun ApplicationsHomeScreenPage(
                 )
                 .pointerInput(null) {
                     detectTapGestures(
+                        onTap = { onApplicationsPageClicked() },
                         onLongPress = { onHomeScreenLongPressed() }
                     )
                 }
