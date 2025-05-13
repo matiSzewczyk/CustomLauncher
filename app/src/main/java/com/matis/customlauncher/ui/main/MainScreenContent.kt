@@ -73,12 +73,13 @@ fun MainScreenContent(
                 uiState = homeScreenUiState,
                 onApplicationClicked = onApplicationClicked,
                 onRemoveFromHomeScreenClicked = homeScreenViewModel::onRemoveFromHomeScreenClicked,
-                onMainScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
+                onHomeScreenLongPressed = homeScreenViewModel::onHomeScreenLongPressed,
                 enableUserScroll = { userScrollEnabled = true },
                 disableUserScroll = { userScrollEnabled = false },
                 onBackPressed = homeScreenViewModel::onBackPressed,
                 onSettingsClicked = onSettingsClicked,
-                onNewPageClicked = homeScreenViewModel::onNewPageClicked
+                onNewPageClicked = homeScreenViewModel::onNewPageClicked,
+                onRemoveApplicationsPageClicked = homeScreenViewModel::onRemoveApplicationsPageClicked
             )
             MainPage.APP_DRAWER.pageNumber -> AppDrawerContent(
                 uiState = appSearchUiState,

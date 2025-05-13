@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -15,6 +16,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.matis.customlauncher.R
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.view.HomeScreenItemDto.Application
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
@@ -48,7 +53,8 @@ fun ApplicationsHomeScreenPage(
     page: Int,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit
+    onHomeScreenLongPressed: () -> Unit,
+    onRemoveApplicationsPageClicked: (Int) -> Unit
 ) {
     val applicationTile = when (uiState.homeScreen.layoutType) {
         HomePageLayoutType.GRID_4X4 -> ApplicationTile(
@@ -62,13 +68,8 @@ fun ApplicationsHomeScreenPage(
     }
 
     CompositionLocalProvider(LocalApplicationTile provides applicationTile) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
-            userScrollEnabled = false,
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(8.dp)
                 .background(
                     color = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent,
@@ -76,24 +77,37 @@ fun ApplicationsHomeScreenPage(
                 )
                 .pointerInput(null) {
                     detectTapGestures(
-                        onLongPress = { onMainScreenLongPressed() }
+                        onLongPress = { onHomeScreenLongPressed() }
                     )
                 }
         ) {
-            itemsIndexed(
-                items = (uiState.homeScreen.pages[page] as Applications).items
-            ) { index, app ->
-                Box(modifier = Modifier.aspectRatio(1f)) {
-                    if (app is Application) {
-                        TransparentApplication(
-                            application = app,
-                            onApplicationClicked = onApplicationClicked,
-                            onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-                            showLabel = uiState.homeScreen.applicationIconConfig.showLabel && !uiState.isInEditMode
-                        )
-                        // TODO: account for folder when adding support
-                    } else {
-                        EmptyApplication()
+            if (uiState.isInEditMode && page != 0) {
+                RemovePageButton(
+                    onRemoveApplicationsPageClicked = { onRemoveApplicationsPageClicked(page) }
+                )
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
+                userScrollEnabled = false,
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                itemsIndexed(
+                    items = (uiState.homeScreen.pages[page] as Applications).items
+                ) { index, app ->
+                    Box(modifier = Modifier.aspectRatio(1f)) {
+                        if (app is Application) {
+                            TransparentApplication(
+                                application = app,
+                                onApplicationClicked = onApplicationClicked,
+                                onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+                                showLabel = uiState.homeScreen.applicationIconConfig.showLabel && !uiState.isInEditMode
+                            )
+                            // TODO: account for folder when adding support
+                        } else {
+                            EmptyApplication()
+                        }
                     }
                 }
             }
@@ -161,4 +175,20 @@ private fun TransparentApplication(
 @Composable
 fun EmptyApplication(modifier: Modifier = Modifier) {
     Box(modifier = modifier) { }
+}
+
+@Composable
+fun RemovePageButton(onRemoveApplicationsPageClicked: () -> Unit) {
+    IconButton(
+        onClick = { onRemoveApplicationsPageClicked() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(62.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.delete),
+            tint = Color.White,
+            contentDescription = null
+        )
+    }
 }

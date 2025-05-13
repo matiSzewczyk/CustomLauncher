@@ -9,10 +9,12 @@ import com.matis.customlauncher.model.domain.HomeScreenApplicationDto
 import com.matis.customlauncher.model.domain.HomeScreenDto
 import com.matis.customlauncher.model.domain.MainPage
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 internal class HomeScreenRepositoryImpl @Inject constructor(
     private val dao: HomeScreenApplicationDao,
@@ -34,6 +36,9 @@ internal class HomeScreenRepositoryImpl @Inject constructor(
     override suspend fun insertNewApplicationsPage() {
         dao.insertNewHomeScreenPage()
     }
+
+    override suspend fun removeApplicationsPage(pageIndex: Int) =
+        withContext(Dispatchers.IO) { dao.removeApplicationsPage(pageIndex) }
 
     override fun fetchHomeScreens(): Flow<HomeScreenDto> =
         combine(

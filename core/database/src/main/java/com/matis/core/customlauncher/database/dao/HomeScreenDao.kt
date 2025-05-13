@@ -30,6 +30,9 @@ abstract class HomeScreenApplicationDao {
     @Query("DELETE FROM home_screen_application WHERE package_name = :packageName")
     abstract fun removeApplicationFromHomeScreen(packageName: String)
 
+    @Query("DELETE FROM home_screen_page WHERE page_index = :pageIndex")
+    abstract suspend fun removeApplicationsPage(pageIndex: Int)
+
     @Query(
         """
             SELECT COALESCE(

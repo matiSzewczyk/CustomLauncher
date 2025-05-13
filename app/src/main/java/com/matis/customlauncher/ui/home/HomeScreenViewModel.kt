@@ -6,6 +6,7 @@ import com.matis.customlauncher.core.data.repository.SettingsRepository
 import com.matis.customlauncher.domain.home.AddNewApplicationsPage
 import com.matis.customlauncher.domain.home.GetHomeScreens
 import com.matis.customlauncher.domain.home.RemoveApplicationFromHomeScreen
+import com.matis.customlauncher.domain.home.RemoveApplicationsPage
 import com.matis.customlauncher.model.domain.HomePageLayoutType
 import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.model.view.HomeScreenItemDto
@@ -34,7 +35,8 @@ class HomeScreenViewModel @Inject constructor(
     settingsRepository: SettingsRepository,
     private val getHomeScreens: GetHomeScreens,
     private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen,
-    private val addNewApplicationsPage: AddNewApplicationsPage
+    private val addNewApplicationsPage: AddNewApplicationsPage,
+    private val removeApplicationsPage: RemoveApplicationsPage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -94,6 +96,10 @@ class HomeScreenViewModel @Inject constructor(
             }
             launch(Dispatchers.Default) { addNewApplicationsPage() }
         }
+    }
+
+    fun onRemoveApplicationsPageClicked(pageIndex: Int) {
+        viewModelScope.launch { removeApplicationsPage(pageIndex) }
     }
 
     private fun fillEmptyPositionsWithEmptyItems(

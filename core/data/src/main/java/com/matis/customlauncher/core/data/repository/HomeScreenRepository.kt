@@ -11,6 +11,7 @@ interface HomeScreenRepository {
     suspend fun reconfigureHomeScreenLayout(newLayout: HomePageLayoutType)
     suspend fun fetchHomeScreenLayout(): HomePageLayoutType
     suspend fun insertNewApplicationsPage()
+    suspend fun removeApplicationsPage(pageIndex: Int)
     fun fetchHomeScreens(): Flow<HomeScreenDto>
     fun fetchHomeScreenApplications(): Flow<List<HomeScreenApplicationDto>>
     fun removeApplicationFromHomeScreen(packageName: String)

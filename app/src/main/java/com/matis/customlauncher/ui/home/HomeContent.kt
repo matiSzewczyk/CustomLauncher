@@ -34,12 +34,13 @@ fun HomeContent(
     uiState: UiState,
     onApplicationClicked: (String) -> Unit,
     onRemoveFromHomeScreenClicked: (String) -> Unit,
-    onMainScreenLongPressed: () -> Unit,
+    onHomeScreenLongPressed: () -> Unit,
     enableUserScroll: () -> Unit,
     disableUserScroll: () -> Unit,
     onBackPressed: () -> Unit,
     onSettingsClicked: () -> Unit,
-    onNewPageClicked: () -> Unit
+    onNewPageClicked: () -> Unit,
+    onRemoveApplicationsPageClicked: (Int) -> Unit
 ) {
     // Disable scroll for vertical pager
     if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
@@ -62,7 +63,8 @@ fun HomeContent(
                     page = page,
                     onApplicationClicked = onApplicationClicked,
                     onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-                    onMainScreenLongPressed = onMainScreenLongPressed
+                    onHomeScreenLongPressed = onHomeScreenLongPressed,
+                    onRemoveApplicationsPageClicked = onRemoveApplicationsPageClicked
                 )
                 uiState.isInEditMode -> NewHomeScreenPage(
                     onNewPageClicked = onNewPageClicked
