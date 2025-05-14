@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,30 +35,30 @@ fun LayoutDialog(
     onDismissRequest: () -> Unit,
     onConfirmClicked: (PageLayoutDto) -> Unit
 ) {
-    var checkedState by remember {
+    var selectedState by remember {
         mutableStateOf(uiState.layoutDialogToDisplay?.getLayoutType(uiState))
     }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    Dialog(
-        onDismissRequest = { onDismissRequest() }
-    ) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
         Card {
-            Column {
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
                 TitleSection()
                 LayoutList(
                     dialogType = uiState.layoutDialogToDisplay!!,
-                    checkedState = checkedState,
-                    onCheckedChange = { checkedState = it }
+                    selected = selectedState,
+                    onClicked = { selectedState = it }
                 )
                 ButtonSection(
                     onCancelClicked = { onDismissRequest() },
                     onConfirmClicked = {
-                        if (checkedState == null) coroutineScope.launch { context.showToast("No layout selected") }
+                        if (selectedState == null) coroutineScope.launch { context.showToast("No layout selected") }
                         else onConfirmClicked(
                             PageLayoutDto(
                                 page = uiState.layoutDialogToDisplay.page,
-                                layoutType = checkedState!!
+                                layoutType = selectedState!!
                             )
                         )
                     }
@@ -86,23 +86,25 @@ private fun TitleSection() {
 @Composable
 fun LayoutList(
     dialogType: LayoutDialogType,
-    checkedState: HomePageLayoutType?,
-    onCheckedChange: (HomePageLayoutType) -> Unit
+    selected: HomePageLayoutType?,
+    onClicked: (HomePageLayoutType) -> Unit
 ) {
-    dialogType.supportedLayouts.forEach {
-        LayoutItem(
-            layoutType = it,
-            checked = it == checkedState,
-            onCheckedChange = { onCheckedChange(it) }
-        )
+    Column {
+        dialogType.supportedLayouts.forEach {
+            LayoutItem(
+                layoutType = it,
+                selected = it == selected,
+                onClicked = { onClicked(it) }
+            )
+        }
     }
 }
 
 @Composable
 fun LayoutItem(
     layoutType: HomePageLayoutType,
-    checked: Boolean,
-    onCheckedChange: () -> Unit
+    selected: Boolean,
+    onClicked: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -110,14 +112,11 @@ fun LayoutItem(
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = { onCheckedChange() }
+        RadioButton(
+            selected = selected,
+            onClick = { onClicked() }
         )
-        Text(
-            text = layoutType.rawName,
-            modifier = Modifier.padding()
-        )
+        Text(text = layoutType.rawName)
     }
 }
 
@@ -128,12 +127,18 @@ fun ButtonSection(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.End
     ) {
-        TextButton(onClick = { onCancelClicked() }) {
+        TextButton(
+            onClick = { onCancelClicked() },
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
             Text(text = "Cancel")
         }
-        TextButton(onClick = { onConfirmClicked() }) {
+        TextButton(
+            onClick = { onConfirmClicked() },
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
             Text(text = "Confirm")
         }
     }

@@ -11,7 +11,6 @@ import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
 import com.matis.customlauncher.ui.settings.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -59,11 +58,11 @@ class SettingsViewModel @Inject constructor(
         _uiState.update { it.copy(layoutDialogToDisplay = LayoutDialogType.AppDrawer) }
     }
 
-    fun onBackPressed(): Job = viewModelScope.launch {
+    fun onBackPressed() {
         if (uiState.value.layoutDialogToDisplay != null) {
             _uiState.update { it.copy(layoutDialogToDisplay = null) }
         } else {
-            _event.emit(Any())
+            _event.tryEmit(Any())
         }
     }
 
