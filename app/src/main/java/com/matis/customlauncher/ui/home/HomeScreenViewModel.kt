@@ -15,10 +15,12 @@ import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
 import com.matis.customlauncher.ui.home.data.HomeScreenViewDto
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.data.toView
+import com.matis.customlauncher.ui.shared.REMOVE_PAGE_DURATION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -55,6 +57,7 @@ class HomeScreenViewModel @Inject constructor(
                         fillEmptyPositionsWithEmptyItems(homeScreen, layoutType)
                     }
                 }
+                .map { if (uiState.value.isInEditMode) it.appendAddNewPage() else it }
                 .collect { homeScreen -> _uiState.update { it.copy(homeScreen = homeScreen) } }
         }
     }
@@ -83,23 +86,15 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     fun onNewPageClicked() {
-        viewModelScope.launch {
-            launch(Dispatchers.Main) {
-
-                _uiState.update {
-                    it.copy(
-                        isInEditMode = false,
-                        homeScreen = uiState.value.homeScreen.removeAddNewPage()
-                            .addNewApplicationsPage()
-                    )
-                }
-            }
-            launch(Dispatchers.Default) { addNewApplicationsPage() }
-        }
+        viewModelScope.launch(Dispatchers.Default) { addNewApplicationsPage() }
     }
 
-    fun onRemoveApplicationsPageClicked(pageIndex: Int) {
-        viewModelScope.launch { removeApplicationsPage(pageIndex) }
+    fun onRemoveApplicationsPageClicked(pagerIndex: Int) {
+        val index = uiState.value.homeScreen.pages[pagerIndex].position
+        viewModelScope.launch {
+            delay(REMOVE_PAGE_DURATION.toLong())
+            removeApplicationsPage(index)
+        }
     }
 
     fun onApplicationsPageClicked() {
@@ -138,14 +133,6 @@ class HomeScreenViewModel @Inject constructor(
     private fun HomeScreenViewDto.removeAddNewPage(): HomeScreenViewDto {
         val homeScreensWithoutNewEmptyPage = pages.filter { it !is HomeScreenPageViewDto.AddNew }
         return copy(pages = homeScreensWithoutNewEmptyPage)
-    }
-
-    private fun HomeScreenViewDto.addNewApplicationsPage(): HomeScreenViewDto {
-        val homeScreensWithNewApplicationsPages = buildList {
-            addAll(pages)
-            add(Applications(pages.size, emptyList()))
-        }
-        return copy(pages = homeScreensWithNewApplicationsPages)
     }
 }
 

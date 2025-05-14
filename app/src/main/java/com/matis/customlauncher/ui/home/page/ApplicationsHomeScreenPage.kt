@@ -1,6 +1,9 @@
 package com.matis.customlauncher.ui.home.page
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +49,7 @@ import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.shared.ApplicationTile
 import com.matis.customlauncher.ui.shared.LocalApplicationTile
+import com.matis.customlauncher.ui.shared.REMOVE_PAGE_DURATION
 import com.matis.customlauncher.ui.shared.getApplicationIcon
 
 @Composable
@@ -73,47 +77,60 @@ fun ApplicationsHomeScreenPage(
         targetValue = if (uiState.isInEditMode) Color.Black.copy(alpha = .6f) else Color.Transparent
     )
 
+    var isBeingRemoved by remember { mutableStateOf(false) }
+
     CompositionLocalProvider(LocalApplicationTile provides applicationTile) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(
-                    color = backgroundColor,
-                    shape = MaterialTheme.shapes.extraLarge
-                )
-                .pointerInput(null) {
-                    detectTapGestures(
-                        onTap = { onApplicationsPageClicked() },
-                        onLongPress = { onHomeScreenLongPressed() }
+        AnimatedVisibility(
+            visible = !isBeingRemoved,
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = tween(durationMillis = REMOVE_PAGE_DURATION)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .background(
+                        color = backgroundColor,
+                        shape = MaterialTheme.shapes.extraLarge
+                    )
+                    .pointerInput(null) {
+                        detectTapGestures(
+                            onTap = { onApplicationsPageClicked() },
+                            onLongPress = { onHomeScreenLongPressed() }
+                        )
+                    }
+            ) {
+                if (uiState.isInEditMode && page != 0) {
+                    RemovePageButton(
+                        onRemoveApplicationsPageClicked = {
+                            onRemoveApplicationsPageClicked(page)
+                            isBeingRemoved = true
+                        }
                     )
                 }
-        ) {
-            if (uiState.isInEditMode && page != 0) {
-                RemovePageButton(
-                    onRemoveApplicationsPageClicked = { onRemoveApplicationsPageClicked(page) }
-                )
-            }
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
-                userScrollEnabled = false,
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                itemsIndexed(
-                    items = (uiState.homeScreen.pages[page] as Applications).items
-                ) { index, app ->
-                    Box(modifier = Modifier.aspectRatio(1f)) {
-                        if (app is Application) {
-                            TransparentApplication(
-                                application = app,
-                                onApplicationClicked = onApplicationClicked,
-                                onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
-                                showLabel = uiState.homeScreen.applicationIconConfig.showLabel && !uiState.isInEditMode
-                            )
-                            // TODO: account for folder when adding support
-                        } else {
-                            EmptyApplication()
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(uiState.homeScreen.layoutType.columns),
+                    userScrollEnabled = false,
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    itemsIndexed(
+                        items = (uiState.homeScreen.pages[page] as Applications).items
+                    ) { index, app ->
+                        Box(modifier = Modifier.aspectRatio(1f)) {
+                            if (app is Application) {
+                                TransparentApplication(
+                                    application = app,
+                                    onApplicationClicked = onApplicationClicked,
+                                    onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
+                                    showLabel = uiState.homeScreen.applicationIconConfig.showLabel && !uiState.isInEditMode
+                                )
+                                // TODO: account for folder when adding support
+                            } else {
+                                EmptyApplication()
+                            }
                         }
                     }
                 }

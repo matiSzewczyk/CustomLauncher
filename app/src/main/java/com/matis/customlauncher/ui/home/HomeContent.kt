@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,9 @@ import com.matis.customlauncher.ui.component.PagerIndicators
 import com.matis.customlauncher.ui.home.data.model.UiState
 import com.matis.customlauncher.ui.home.page.ApplicationsHomeScreenPage
 import com.matis.customlauncher.ui.home.page.NewHomeScreenPage
+import com.matis.customlauncher.ui.shared.REMOVE_PAGE_DURATION
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeContent(
@@ -47,6 +51,7 @@ fun HomeContent(
     if (uiState.isInEditMode) disableUserScroll() else enableUserScroll()
 
     val pagerState = rememberPagerState(pageCount = { uiState.homeScreen.pages.size })
+    val coroutineScope = rememberCoroutineScope()
 
     BackHandler {
         onBackPressed()
@@ -65,7 +70,13 @@ fun HomeContent(
                     onApplicationClicked = onApplicationClicked,
                     onRemoveFromHomeScreenClicked = onRemoveFromHomeScreenClicked,
                     onHomeScreenLongPressed = onHomeScreenLongPressed,
-                    onRemoveApplicationsPageClicked = onRemoveApplicationsPageClicked,
+                    onRemoveApplicationsPageClicked = {
+                        onRemoveApplicationsPageClicked(it)
+                        coroutineScope.launch {
+                            delay(REMOVE_PAGE_DURATION.toLong())
+                            pagerState.animateScrollToPage((it - 1).coerceAtLeast(0))
+                        }
+                    },
                     onApplicationsPageClicked = onApplicationsPageClicked
                 )
                 uiState.isInEditMode -> NewHomeScreenPage(

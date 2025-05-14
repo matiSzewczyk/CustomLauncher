@@ -28,11 +28,12 @@ fun HomeScreenPager(
     isInEditMode: Boolean,
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(pageCount = { 1 }),
-    content: @Composable (page: Int) -> Unit
+    content: @Composable (page: Int) -> Unit,
 ) {
     val animatedPadding by animateDpAsState(
         targetValue = if (isInEditMode) 32.dp else 0.dp
     )
+
 
     HorizontalPager(
         state = pagerState,
