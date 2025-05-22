@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.matis.customlauncher.model.view.ApplicationInfoViewDto
@@ -81,7 +80,10 @@ private fun ApplicationList(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        items(items = uiState.applications) { application ->
+        items(
+            items = uiState.applications,
+            key = { it.packageName }
+        ) { application ->
             TransparentApplication(
                 application = application,
                 onApplicationClicked = { onApplicationClicked(application.packageName) },
@@ -107,9 +109,9 @@ private fun TransparentApplication(
     onAddToHomeScreenClicked: (ApplicationInfoViewDto) -> Unit,
     onRemoveFromHomeScreenClicked: (ApplicationInfoViewDto) -> Unit
 ) {
-    var pressOffset by remember { mutableStateOf(DpOffset(0.dp, 0.dp)) }
     var menuExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val icon = remember { context.getApplicationIcon(application.packageName) }
 
     Row(
         modifier = Modifier
@@ -118,16 +120,13 @@ private fun TransparentApplication(
             .pointerInput(true) {
                 detectTapGestures(
                     onTap = { onApplicationClicked() },
-                    onLongPress = { offset ->
-                        menuExpanded = true
-                        pressOffset = DpOffset(offset.x.toDp(), offset.y.toDp())
-                    }
+                    onLongPress = { menuExpanded = true }
                 )
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            model = context.getApplicationIcon(application.packageName),
+            model = icon,
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -136,7 +135,6 @@ private fun TransparentApplication(
         DropdownMenu(
             expanded = menuExpanded,
             onDismissRequest = { menuExpanded = false },
-            offset = pressOffset.copy(y = pressOffset.y - 82.dp),
         ) {
             if (application.isHomeScreenApplication) RemoveFromHomeScreenMenuItem {
                 menuExpanded = false

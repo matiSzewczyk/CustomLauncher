@@ -74,9 +74,7 @@ class AppDrawerViewModel @Inject constructor(
                     }
                 }
                 .flowOn(Dispatchers.Default)
-                .collect { filteredApps ->
-                    _uiState.update { it.copy(applications = filteredApps) }
-                }
+                .collect { filteredApps -> _uiState.update { it.copy(applications = filteredApps) } }
         }
     }
 }

@@ -1,9 +1,10 @@
 package com.matis.customlauncher.model.view
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.matis.customlauncher.model.domain.ApplicationInfoDto
 
-@Stable
+@Immutable
 data class ApplicationInfoViewDto(
     val packageName: String,
     val label: String,
