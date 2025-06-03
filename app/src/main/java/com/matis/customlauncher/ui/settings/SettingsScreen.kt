@@ -1,6 +1,5 @@
 package com.matis.customlauncher.ui.settings
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,20 +27,10 @@ import com.matis.customlauncher.ui.component.SettingsCard
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
-    onBackPressed: () -> Unit
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    BackHandler {
-        viewModel.onBackPressed()
-    }
-
-    LaunchedEffect(null) {
-        viewModel.event.collect { event ->
-            onBackPressed()
-        }
-    }
     if (uiState.layoutDialogToDisplay != null) {
         LayoutDialog(
             uiState = uiState,

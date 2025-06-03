@@ -11,9 +11,7 @@ import com.matis.customlauncher.ui.settings.data.model.LayoutDialogType
 import com.matis.customlauncher.ui.settings.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -25,9 +23,6 @@ class SettingsViewModel @Inject constructor(
     private val saveNewApplicationIconConfig: SaveNewApplicationIconConfig,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
-
-    private val _event = MutableSharedFlow<Any>()
-    val event get() = _event.asSharedFlow()
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState get() = _uiState.asStateFlow()
@@ -56,14 +51,6 @@ class SettingsViewModel @Inject constructor(
 
     fun onAppDrawerLayoutClicked() {
         _uiState.update { it.copy(layoutDialogToDisplay = LayoutDialogType.AppDrawer) }
-    }
-
-    fun onBackPressed() {
-        if (uiState.value.layoutDialogToDisplay != null) {
-            _uiState.update { it.copy(layoutDialogToDisplay = null) }
-        } else {
-            _event.tryEmit(Any())
-        }
     }
 
     fun onLayoutDialogDismissed() {

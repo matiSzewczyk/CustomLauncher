@@ -17,13 +17,11 @@ fun NavController.navigateToSettings() {
     navigate(SettingsScreen)
 }
 
-fun NavGraphBuilder.settingsNavigation(
-    onBackPressed: () -> Unit
-) {
+fun NavGraphBuilder.settingsNavigation() {
     composable<SettingsScreen>(
         enterTransition = { scaleIn(initialScale = 0f) + fadeIn() },
         exitTransition = { scaleOut() + fadeOut() }
     ) {
-        SettingsScreen(onBackPressed = onBackPressed)
+        SettingsScreen()
     }
 }

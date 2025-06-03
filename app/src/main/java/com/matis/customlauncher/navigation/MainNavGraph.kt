@@ -18,8 +18,6 @@ fun NavGraphBuilder.mainNavGraph(
             appState = appState,
             navController = navController
         )
-        settingsNavigation(
-            onBackPressed = navController::popBackStack
-        )
+        settingsNavigation()
     }
 }
