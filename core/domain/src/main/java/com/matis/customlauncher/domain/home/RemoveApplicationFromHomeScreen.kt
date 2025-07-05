@@ -4,10 +4,10 @@ import com.matis.customlauncher.core.data.repository.HomeScreenRepository
 import javax.inject.Inject
 
 class RemoveApplicationFromHomeScreen @Inject constructor(
-    private val homeScreenRepository: HomeScreenRepository
+    private val repository: HomeScreenRepository
 ) {
 
     operator fun invoke(packageName: String) {
-        homeScreenRepository.removeApplicationFromHomeScreen(packageName)
+        repository.removeApplicationFromHomeScreen(packageName)
     }
 }

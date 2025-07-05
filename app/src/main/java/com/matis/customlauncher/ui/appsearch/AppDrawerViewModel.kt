@@ -12,7 +12,6 @@ import com.matis.customlauncher.model.view.toDomain
 import com.matis.customlauncher.model.view.toView
 import com.matis.customlauncher.ui.appsearch.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -26,6 +25,8 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import pl.matis.customlauncher.common.DispatcherProvider
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -33,7 +34,8 @@ class AppDrawerViewModel @Inject constructor(
     private val addApplicationToHomeScreen: AddApplicationToHomeScreen,
     private val getApplicationsMatchingQuery: GetApplicationsMatchingQuery,
     private val getHomeScreenApplications: GetHomeScreenApplications,
-    private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen
+    private val removeApplicationFromHomeScreen: RemoveApplicationFromHomeScreen,
+    private val dispatcher: DispatcherProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -60,7 +62,7 @@ class AppDrawerViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState
                 .map { it.query }
-                .debounce(timeoutMillis = 200)
+                .debounce(200)
                 .distinctUntilChanged()
                 .flatMapLatest { query ->
                     combine(
@@ -73,7 +75,7 @@ class AppDrawerViewModel @Inject constructor(
                         applications.map { app -> app.toView(isHomeScreenApp(app)) }
                     }
                 }
-                .flowOn(Dispatchers.Default)
+                .flowOn(dispatcher.default)
                 .collect { filteredApps -> _uiState.update { it.copy(applications = filteredApps) } }
         }
     }
