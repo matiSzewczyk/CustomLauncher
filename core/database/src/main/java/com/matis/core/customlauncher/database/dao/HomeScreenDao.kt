@@ -21,6 +21,7 @@ abstract class HomeScreenApplicationDao {
     @Insert(onConflict = REPLACE)
     abstract fun insertHomeScreenApplication(data: HomeScreenApplicationEntity)
 
+    @Transaction
     @Query("SELECT * FROM home_screen_page")
     abstract fun fetchAllHomeScreens(): Flow<List<HomeScreenPageRelationData>>
 
