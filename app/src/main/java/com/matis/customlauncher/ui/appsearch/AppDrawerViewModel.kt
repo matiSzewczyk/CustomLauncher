@@ -12,7 +12,6 @@ import com.matis.customlauncher.model.view.toDomain
 import com.matis.customlauncher.model.view.toView
 import com.matis.customlauncher.ui.appsearch.data.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,11 +49,11 @@ class AppDrawerViewModel @Inject constructor(
     }
 
     fun onAddToHomeScreenClicked(application: ApplicationInfoViewDto) {
-        viewModelScope.launch(Dispatchers.IO) { addApplicationToHomeScreen(application.toDomain()) }
+        viewModelScope.launch(dispatcher.io) { addApplicationToHomeScreen(application.toDomain()) }
     }
 
     fun onRemoveFromHomeScreenClicked(application: ApplicationInfoViewDto) {
-        viewModelScope.launch(Dispatchers.IO) { removeApplicationFromHomeScreen(application.packageName) }
+        viewModelScope.launch(dispatcher.io) { removeApplicationFromHomeScreen(application.packageName) }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

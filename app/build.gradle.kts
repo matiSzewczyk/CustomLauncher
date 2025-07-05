@@ -75,7 +75,6 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.io.coil.kt.compose)
 }

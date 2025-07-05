@@ -28,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.matis.customlauncher.model.view.ApplicationInfoViewDto
 import com.matis.customlauncher.ui.appsearch.data.model.UiState
 import com.matis.customlauncher.ui.shared.RoundedTextField
 import com.matis.customlauncher.ui.shared.getApplicationIcon
+import pl.matis.customlauncher.testing.data.applications
 
 @Composable
 fun AppDrawerContent(
@@ -117,6 +119,7 @@ private fun TransparentApplication(
         modifier = Modifier
             .fillMaxWidth()
             .height(84.dp)
+            .testTag("application: ${application.packageName}")
             .pointerInput(true) {
                 detectTapGestures(
                     onTap = { onApplicationClicked() },

@@ -7,4 +7,5 @@ import kotlinx.coroutines.Dispatchers
 internal class DispatcherProviderImpl @Inject constructor() : DispatcherProvider {
 
     override val default: CoroutineDispatcher = Dispatchers.Default
+    override val io: CoroutineDispatcher = Dispatchers.IO
 }

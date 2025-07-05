@@ -13,9 +13,9 @@ import org.junit.Rule
 import org.junit.Test
 import pl.matis.customlauncher.testing.MainDispatcherRule
 import pl.matis.customlauncher.testing.TestDispatcherProvider
+import pl.matis.customlauncher.testing.data.installedApplications
 import pl.matis.customlauncher.testing.repository.TestHomeScreenRepository
 import pl.matis.customlauncher.testing.repository.TestInstalledApplicationsRepository
-import pl.matis.customlauncher.testing.repository.TestInstalledApplicationsRepository.Companion.installedApplications
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AppDrawerViewModelTest {
