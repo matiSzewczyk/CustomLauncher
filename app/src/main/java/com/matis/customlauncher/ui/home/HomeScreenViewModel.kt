@@ -12,9 +12,9 @@ import com.matis.customlauncher.model.domain.MainPage
 import com.matis.customlauncher.model.view.HomeScreenItemDto
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto
 import com.matis.customlauncher.model.view.HomeScreenPageViewDto.Applications
-import com.matis.customlauncher.ui.home.data.HomeScreenViewDto
+import com.matis.customlauncher.model.view.HomeScreenViewDto
 import com.matis.customlauncher.ui.home.data.model.UiState
-import com.matis.customlauncher.ui.home.data.toView
+import com.matis.customlauncher.model.view.toView
 import com.matis.customlauncher.ui.shared.REMOVE_PAGE_DURATION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

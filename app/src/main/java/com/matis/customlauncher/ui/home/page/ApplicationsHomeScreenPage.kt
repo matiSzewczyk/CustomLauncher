@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,6 +95,7 @@ fun ApplicationsHomeScreenPage(
                         color = backgroundColor,
                         shape = MaterialTheme.shapes.extraLarge
                     )
+                    .testTag("Parent home wrapper")
                     .pointerInput(null) {
                         detectTapGestures(
                             onTap = { onApplicationsPageClicked() },
@@ -119,7 +121,9 @@ fun ApplicationsHomeScreenPage(
                     itemsIndexed(
                         items = (uiState.homeScreen.pages[page] as Applications).items
                     ) { index, app ->
-                        Box(modifier = Modifier.aspectRatio(1f)) {
+                        Box(modifier = Modifier
+                            .aspectRatio(1f)
+                            .testTag("Application tile")) {
                             if (app is Application) {
                                 TransparentApplication(
                                     application = app,

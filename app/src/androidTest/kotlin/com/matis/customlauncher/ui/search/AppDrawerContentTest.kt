@@ -1,6 +1,7 @@
 package com.matis.customlauncher.ui.search
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
@@ -31,7 +32,7 @@ class AppDrawerContentTest {
 
         composeTestRule
             .onNodeWithTag("application: ${applications[0].packageName}")
-            .assertExists()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -51,7 +52,7 @@ class AppDrawerContentTest {
                 .performTouchInput { longClick() }
 
             onNodeWithText("Add to home screen")
-                .assertExists()
+                .assertIsDisplayed()
         }
     }
 
@@ -74,7 +75,7 @@ class AppDrawerContentTest {
                 .performTouchInput { longClick() }
 
             onNodeWithText("Remove from home screen")
-                .assertExists()
+                .assertIsDisplayed()
         }
     }
 }
